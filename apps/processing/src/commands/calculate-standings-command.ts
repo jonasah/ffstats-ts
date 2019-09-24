@@ -35,5 +35,7 @@ export class CalculateStandingsCommand implements ICommand {
     }
   }
 
-  public run(): void {}
+  public run(): void {
+    // TODO
+  }
 }

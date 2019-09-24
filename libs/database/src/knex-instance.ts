@@ -1,3 +1,4 @@
+// tslint:disable-next-line: import-name
 import Knex from 'knex';
 import path from 'path';
 

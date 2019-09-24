@@ -26,5 +26,7 @@ export class AddScheduleCommand implements ICommand {
     }
   }
 
-  public run() {}
+  public run(): void {
+    // TODO
+  }
 }

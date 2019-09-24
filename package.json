@@ -32,6 +32,10 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register ./apps/processing/src/main.ts",
     "build": "echo nope",
-    "test": "jest"
+    "test": "jest",
+    "format:check": "prettier --check \"**/*.ts\"",
+    "format:fix": "prettier --write \"**/*.ts\"",
+    "lint:check": "tslint --project .",
+    "lint:fix": "tslint --project . --fix"
   }
 }

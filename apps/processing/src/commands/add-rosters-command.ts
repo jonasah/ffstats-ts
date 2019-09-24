@@ -34,5 +34,7 @@ export class AddRostersCommand implements ICommand {
     }
   }
 
-  public run(): void {}
+  public run(): void {
+    // TODO
+  }
 }
