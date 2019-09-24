@@ -16,7 +16,11 @@ describe('getCommand', () => {
     addRostersCommand = new AddRostersCommand();
     calculateStandingsCommand = new CalculateStandingsCommand();
 
-    availableCommands = [addScheduleCommand, addRostersCommand, calculateStandingsCommand];
+    availableCommands = [
+      addScheduleCommand,
+      addRostersCommand,
+      calculateStandingsCommand
+    ];
   });
 
   it('should return correct command', () => {

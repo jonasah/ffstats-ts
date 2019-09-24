@@ -7,7 +7,9 @@ export abstract class DbRepository<T> implements IDbRepository<T> {
   protected constructor(private readonly tableName: string) {}
 
   public async createTable(): Promise<void> {
-    await knex.schema.createTable(this.tableName, table => this.createTableCallback(table));
+    await knex.schema.createTable(this.tableName, table =>
+      this.createTableCallback(table)
+    );
   }
 
   public async create(entity: T): Promise<void> {

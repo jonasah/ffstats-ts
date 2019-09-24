@@ -19,7 +19,9 @@ export function getCommand(availableCommands: ICommand[], args?: string[]): ICom
     throw new Error('No command specified');
   }
 
-  const selectedCommand = availableCommands.find(command => command.name === mainOptions.command);
+  const selectedCommand = availableCommands.find(
+    command => command.name === mainOptions.command
+  );
 
   if (selectedCommand == null) {
     throw new Error(`Unknown command: ${mainOptions.command}`);
