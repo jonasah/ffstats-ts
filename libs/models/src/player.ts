@@ -1,7 +1,7 @@
 import { Position } from './enums/position';
 
 export interface Player {
-  Id: number;
-  Name: string;
-  Position: Position;
+  id: number;
+  name: string;
+  position: Position;
 }

@@ -1,8 +1,8 @@
 export interface PlayoffProbability {
-  Id: number;
-  Year: number;
-  Week: number;
-  TeamId: number;
-  IncludingTiebreaker: number;
-  ExcludingTiebreaker: number;
+  id: number;
+  year: number;
+  week: number;
+  teamId: number;
+  includingTiebreaker: number;
+  excludingTiebreaker: number;
 }

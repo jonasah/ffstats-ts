@@ -11,12 +11,12 @@ export class TeamRepository extends DbRepository<Team> {
   }
 
   protected createTableCallback(table: CreateTableBuilder) {
-    table.increments('Id');
-    table.text('Name').notNullable();
-    table.text('Owner');
+    table.increments('id');
+    table.text('name').notNullable();
+    table.text('owner');
   }
 
   protected getInsertData(team: Team) {
-    return { Name: team.Name, Owner: team.Owner };
+    return { Name: team.name, Owner: team.owner };
   }
 }

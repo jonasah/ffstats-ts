@@ -22,8 +22,8 @@ export abstract class Standings {
   }
 
   public addResult(game: Game) {
-    const gameScore1 = game.GameScores[0];
-    const gameScore2 = game.GameScores[1];
+    const gameScore1 = game.gameScores[0];
+    const gameScore2 = game.gameScores[1];
   }
 
   public abstract sortStandings(): void;
@@ -31,7 +31,7 @@ export abstract class Standings {
   public getHighestPointsForRecord() {
     return this.teamRecords.reduce(
       (acc, tr) => {
-        return acc.PointsFor > tr.PointsFor ? acc : tr;
+        return acc.pointsFor > tr.pointsFor ? acc : tr;
       },
       {} as TeamRecord
     );
@@ -48,17 +48,17 @@ export abstract class Standings {
 
       teams.forEach(team => {
         teamRecords.push({
-          Year: year,
-          Week: 0,
-          TeamId: team.Id,
+          year,
+          week: 0,
+          teamId: team.id,
           // create H2H records against eveny other team
-          Head2HeadRecords: teams
-            .filter(t => t.Id !== team.Id)
+          head2HeadRecords: teams
+            .filter(t => t.id !== team.id)
             .map(t => ({
               Year: year,
               Week: week,
-              TeamId: team.Id,
-              OpponentId: t.Id
+              TeamId: team.id,
+              OpponentId: t.id
             }))
         });
       });
@@ -74,29 +74,29 @@ export abstract class Standings {
   }
 
   protected getTeamRecord(teamId: number) {
-    return this.teamRecords.find(tr => tr.TeamId === teamId);
+    return this.teamRecords.find(tr => tr.teamId === teamId);
   }
 
   protected getHead2HeadRecord(teamRecord: TeamRecord, opponentId: number) {
-    return teamRecord.Head2HeadRecords.find(h2h => h2h.OpponentId === opponentId);
+    return teamRecord.head2HeadRecords.find(h2h => h2h.opponentId === opponentId);
   }
 
   private advanceWeek() {
     this.teamRecords.forEach(teamRecord => {
-      teamRecord.Week += 1;
+      teamRecord.week += 1;
 
-      teamRecord.Head2HeadRecords.forEach(h2hRecord => {
-        h2hRecord.Week += 1;
+      teamRecord.head2HeadRecords.forEach(h2hRecord => {
+        h2hRecord.week += 1;
       });
     });
   }
 
   private setIdsToZero() {
     this.teamRecords.forEach(teamRecord => {
-      teamRecord.Id = 0;
+      teamRecord.id = 0;
 
-      teamRecord.Head2HeadRecords.forEach(h2hRecord => {
-        h2hRecord.Id = 0;
+      teamRecord.head2HeadRecords.forEach(h2hRecord => {
+        h2hRecord.id = 0;
       });
     });
   }

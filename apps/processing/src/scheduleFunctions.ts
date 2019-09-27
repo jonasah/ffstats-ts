@@ -29,16 +29,16 @@ export function addSchedule(scheduleFile: string, force: boolean = false) {
     week.games.forEach(game => {
       if (!teams[game.team1]) {
         const team: Team = {
-          Name: game.team1,
-          Owner: ''
+          name: game.team1,
+          owner: ''
         };
 
         teams[game.team1] = team;
       }
       if (!teams[game.team2]) {
         const team: Team = {
-          Name: game.team2,
-          Owner: ''
+          name: game.team2,
+          owner: ''
         };
 
         teams[game.team2] = team;
@@ -48,8 +48,8 @@ export function addSchedule(scheduleFile: string, force: boolean = false) {
       const team2 = teams[game.team2];
 
       gamesToAdd.push({
-        Year: schedule.year,
-        Week: week.week
+        year: schedule.year,
+        week: week.week
         // TODO: game scores
       });
     });

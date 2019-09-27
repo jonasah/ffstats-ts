@@ -11,26 +11,26 @@ export class PlayoffStandings extends Standings {
   public addResult(game: Game) {
     super.addResult(game);
 
-    const gameScore1 = game.GameScores[0];
-    const gameScore2 = game.GameScores[1];
+    const gameScore1 = game.gameScores[0];
+    const gameScore2 = game.gameScores[1];
 
-    const team1Record = this.getTeamRecord(gameScore1.TeamId);
-    const team2Record = this.getTeamRecord(gameScore2.TeamId);
+    const team1Record = this.getTeamRecord(gameScore1.teamId);
+    const team2Record = this.getTeamRecord(gameScore2.teamId);
 
-    const bestRank = Math.min(team1Record.Rank, team2Record.Rank);
-    const worstRank = Math.max(team1Record.Rank, team2Record.Rank);
+    const bestRank = Math.min(team1Record.rank, team2Record.rank);
+    const worstRank = Math.max(team1Record.rank, team2Record.rank);
 
-    if (gameScore1.Points > gameScore2.Points) {
-      team1Record.Rank = bestRank;
-      team2Record.Rank = worstRank;
+    if (gameScore1.points > gameScore2.points) {
+      team1Record.rank = bestRank;
+      team2Record.rank = worstRank;
     } else {
-      team1Record.Rank = worstRank;
-      team2Record.Rank = bestRank;
+      team1Record.rank = worstRank;
+      team2Record.rank = bestRank;
     }
   }
 
   public sortStandings() {
     // sort by rank
-    this.teamRecords.sort((tr1, tr2) => compareTo(tr1.Rank, tr2.Rank));
+    this.teamRecords.sort((tr1, tr2) => compareTo(tr1.rank, tr2.rank));
   }
 }

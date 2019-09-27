@@ -1,14 +1,14 @@
 export interface SeasonInfo {
-  Id: number;
-  NumTeams: number;
-  NumPlayoffTeams: number;
-  RegularSeasonLength: number;
-  PlayoffLength: number;
-  ChampionId?: number;
-  SecondPlaceId?: number;
-  ThirdPlaceId?: number;
-  SackoId?: number;
-  RegularSeasonChampionId?: number;
-  HighestPointsForTeamId?: number;
-  HighestPointsFor: number;
+  id: number;
+  numTeams: number;
+  numPlayoffTeams: number;
+  regularSeasonLength: number;
+  playoffLength: number;
+  championId?: number;
+  secondPlaceId?: number;
+  thirdPlaceId?: number;
+  sackoId?: number;
+  regularSeasonChampionId?: number;
+  highestPointsForTeamId?: number;
+  highestPointsFor: number;
 }

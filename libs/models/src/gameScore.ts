@@ -1,8 +1,8 @@
 export interface GameScore {
-  Id: number;
-  Year: number;
-  Week: number;
-  TeamId: number;
-  Points?: number;
-  GameId: number;
+  id: number;
+  year: number;
+  week: number;
+  teamId: number;
+  points?: number;
+  gameId: number;
 }

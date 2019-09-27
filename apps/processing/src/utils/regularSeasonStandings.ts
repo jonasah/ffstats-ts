@@ -34,6 +34,6 @@ export class RegularSeasonStandings extends Standings {
 
     // assign rank
     let rank = 1;
-    this.teamRecords.forEach(tr => (tr.Rank = rank += 1));
+    this.teamRecords.forEach(tr => (tr.rank = rank += 1));
   }
 }

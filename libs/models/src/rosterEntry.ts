@@ -1,12 +1,12 @@
 import { Position } from './enums/position';
 
 export interface RosterEntry {
-  Id: number;
-  Year: number;
-  Week: number;
-  TeamId: number;
-  PlayerId: number;
-  Position: Position;
-  Points?: number;
-  IsByeWeek: boolean;
+  id: number;
+  year: number;
+  week: number;
+  teamId: number;
+  playerId: number;
+  position: Position;
+  points?: number;
+  isByeWeek: boolean;
 }
