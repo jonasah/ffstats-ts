@@ -1,4 +1,4 @@
-import { GameScore } from './game-score';
+import { GameScore } from './gameScore';
 
 export interface Game {
   Id?: number;

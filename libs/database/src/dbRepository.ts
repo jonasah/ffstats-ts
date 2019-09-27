@@ -1,7 +1,7 @@
 import { CreateTableBuilder } from 'knex';
 
-import { IDbRepository } from './db-repository.interface';
-import { knex } from './knex-instance';
+import { IDbRepository } from './dbRepository.interface';
+import { knex } from './knexInstance';
 
 export abstract class DbRepository<T> implements IDbRepository<T> {
   protected constructor(private readonly tableName: string) {}

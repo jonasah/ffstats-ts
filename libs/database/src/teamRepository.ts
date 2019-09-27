@@ -1,7 +1,7 @@
 import { Team } from '@ffstats/models';
 import { CreateTableBuilder } from 'knex';
 
-import { DbRepository } from './db-repository';
+import { DbRepository } from './dbRepository';
 
 const tableName = 'Teams';
 

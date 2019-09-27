@@ -1,7 +1,7 @@
 import { TeamRecord } from '@ffstats/models';
 
 import { fuzzyCompareEqual } from '../math/math';
-import { RegularSeasonSubStandings } from './regular-season-sub-standings';
+import { RegularSeasonSubStandings } from './regularSeasonSubStandings';
 import { Standings } from './standings';
 
 export class RegularSeasonStandings extends Standings {

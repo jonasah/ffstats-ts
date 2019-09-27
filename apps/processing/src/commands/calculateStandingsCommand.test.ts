@@ -1,10 +1,10 @@
-import { CalculatePlayoffProbCommand } from './calculate-playoff-prob-command';
+import { CalculateStandingsCommand } from './calculateStandingsCommand';
 
-describe('Calculate playoff prob command', () => {
-  let command: CalculatePlayoffProbCommand;
+describe('Calculate standings command', () => {
+  let command: CalculateStandingsCommand;
 
   beforeEach(() => {
-    command = new CalculatePlayoffProbCommand();
+    command = new CalculateStandingsCommand();
   });
 
   it('should succeed on year and single week', () => {

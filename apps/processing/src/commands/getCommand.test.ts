@@ -1,8 +1,8 @@
-import { AddRostersCommand } from './add-rosters-command';
-import { AddScheduleCommand } from './add-schedule-command';
-import { CalculateStandingsCommand } from './calculate-standings-command';
+import { AddRostersCommand } from './addRostersCommand';
+import { AddScheduleCommand } from './addScheduleCommand';
+import { CalculateStandingsCommand } from './calculateStandingsCommand';
 import { ICommand } from './command.interface';
-import { getCommand } from './get-command';
+import { getCommand } from './getCommand';
 
 describe('getCommand', () => {
   let addScheduleCommand: AddScheduleCommand;

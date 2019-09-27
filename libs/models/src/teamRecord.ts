@@ -1,4 +1,4 @@
-import { Head2HeadRecord } from './head2head-record';
+import { Head2HeadRecord } from './head2HeadRecord';
 
 export interface TeamRecord {
   Id: number;

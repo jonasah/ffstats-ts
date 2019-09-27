@@ -2,13 +2,13 @@ import { createLogger } from '@ffstats/logger';
 import { Service } from 'typedi';
 
 import { IApp } from '../../common';
-import { AddPlayoffProbCommand } from './commands/add-playoff-prob-command';
-import { AddRostersCommand } from './commands/add-rosters-command';
-import { AddScheduleCommand } from './commands/add-schedule-command';
-import { CalculatePlayoffProbCommand } from './commands/calculate-playoff-prob-command';
-import { CalculateStandingsCommand } from './commands/calculate-standings-command';
+import { AddPlayoffProbCommand } from './commands/addPlayoffProbCommand';
+import { AddRostersCommand } from './commands/addRostersCommand';
+import { AddScheduleCommand } from './commands/addScheduleCommand';
+import { CalculatePlayoffProbCommand } from './commands/calculatePlayoffProbCommand';
+import { CalculateStandingsCommand } from './commands/calculateStandingsCommand';
 import { ICommand } from './commands/command.interface';
-import { getCommand } from './commands/get-command';
+import { getCommand } from './commands/getCommand';
 
 @Service()
 export class ProcessingApp implements IApp {

@@ -1,7 +1,7 @@
 import { Game, Team, TeamRecord } from '@ffstats/models';
 
-import { PlayoffStandings } from './playoff-standings';
-import { RegularSeasonStandings } from './regular-season-standings';
+import { PlayoffStandings } from './playoffStandings';
+import { RegularSeasonStandings } from './regularSeasonStandings';
 
 export abstract class Standings {
   protected teamRecords: TeamRecord[];

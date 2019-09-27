@@ -1,4 +1,4 @@
-import { AddScheduleCommand } from './add-schedule-command';
+import { AddScheduleCommand } from './addScheduleCommand';
 
 describe('Add schedule command', () => {
   let command: AddScheduleCommand;

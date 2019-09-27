@@ -1,21 +1,21 @@
-import { AddPlayoffProbCommand } from './add-playoff-prob-command';
+import { AddRostersCommand } from './addRostersCommand';
 
-describe('Add playoff prob command', () => {
-  let command: AddPlayoffProbCommand;
+describe('Add rosters command', () => {
+  let command: AddRostersCommand;
 
   beforeEach(() => {
-    command = new AddPlayoffProbCommand();
+    command = new AddRostersCommand();
   });
 
   it('should succeed with file argument', () => {
-    const args = ['-f', 'playoff-prob-file.json'];
+    const args = ['-f', 'rosters-file.json'];
     expect(() => {
       command.parseArguments(args);
     }).not.toThrow();
   });
 
   it('should succeed with directory argument', () => {
-    const args = ['-d', 'playoff-prob-directory'];
+    const args = ['-d', 'rosters-directory'];
     expect(() => {
       command.parseArguments(args);
     }).not.toThrow();
@@ -29,14 +29,14 @@ describe('Add playoff prob command', () => {
   });
 
   it('should fail on multiple file arguments', () => {
-    const args = ['-f', 'playoff-prob-file1.json', '-f', 'playoff-prob-file2.json'];
+    const args = ['-f', 'rosters-file1.json', '-f', 'rosters-file2.json'];
     expect(() => {
       command.parseArguments(args);
     }).toThrow();
   });
 
   it('should fail on multiple directory arguments', () => {
-    const args = ['-d', 'playoff-prob-directory1', '-d', 'playoff-prob-directory2'];
+    const args = ['-d', 'rosters-directory1', '-d', 'rosters-directory2'];
     expect(() => {
       command.parseArguments(args);
     }).toThrow();
