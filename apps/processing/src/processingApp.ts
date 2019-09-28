@@ -1,41 +1,37 @@
-import { createLogger } from '@ffstats/logger';
-import { Service } from 'typedi';
-
+import { Logger } from '@ffstats/logger';
+import { Inject, Service, Token } from 'typedi';
 import { IApp } from '../../common';
-import { AddPlayoffProbCommand } from './commands/addPlayoffProbCommand';
-import { AddRostersCommand } from './commands/addRostersCommand';
-import { AddScheduleCommand } from './commands/addScheduleCommand';
-import { CalculatePlayoffProbCommand } from './commands/calculatePlayoffProbCommand';
-import { CalculateStandingsCommand } from './commands/calculateStandingsCommand';
 import { ICommand } from './commands/command.interface';
 import { getCommand } from './commands/getCommand';
 
+export const commandsToken = new Token<ICommand[]>('commandsToken');
+
 @Service()
 export class ProcessingApp implements IApp {
+  constructor(
+    @Inject(commandsToken) private readonly availableCommands: ICommand[],
+    private readonly logger: Logger
+  ) {}
+
   public async run(): Promise<number> {
-    const logger = createLogger();
-
-    const availableCommands: ICommand[] = [
-      new AddScheduleCommand(),
-      new AddRostersCommand(),
-      new AddPlayoffProbCommand(),
-      new CalculateStandingsCommand(),
-      new CalculatePlayoffProbCommand()
-    ];
-
     const command = (() => {
       try {
-        return getCommand(availableCommands);
+        return getCommand(this.availableCommands);
       } catch (e) {
-        logger.error(e.message);
+        this.logger.error(e.message);
       }
     })();
 
     if (command == null) {
-      return -1;
+      return 1;
     }
 
-    command.run();
+    try {
+      await command.run();
+    } catch (e) {
+      this.logger.error(e.message);
+      return 1;
+    }
 
     return 0;
   }

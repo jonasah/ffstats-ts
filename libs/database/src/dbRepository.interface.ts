@@ -1,7 +1,7 @@
 export interface IDbRepository<T> {
-  createTable(): Promise<void>;
-  create(entity: T): Promise<void>;
-  getAll(): Promise<T[]>;
+  create(entity: Partial<T> | Partial<T>[]): Promise<number>;
+
   get(id: number): Promise<T>;
-  update?(id: number, entity: T): void;
+  get(column: string, value: any): Promise<T[]>;
+  get(column: string, value: any, unique: true): Promise<T>;
 }

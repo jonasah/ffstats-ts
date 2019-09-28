@@ -1,5 +1,8 @@
+import { TeamName } from './teamName';
+
 export interface Team {
-  id?: number;
-  name: string;
+  id: number;
   owner: string;
+
+  teamNames: TeamName[];
 }

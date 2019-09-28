@@ -1,31 +1,31 @@
-import { CreateTableBuilder } from 'knex';
-
 import { IDbRepository } from './dbRepository.interface';
 import { knex } from './knexInstance';
 
 export abstract class DbRepository<T> implements IDbRepository<T> {
   protected constructor(private readonly tableName: string) {}
 
-  public async createTable(): Promise<void> {
-    await knex.schema.createTable(this.tableName, table =>
-      this.createTableCallback(table)
-    );
+  public async create(entity: Partial<T> | Partial<T>[]): Promise<number> {
+    return (await knex<T>(this.tableName).insert(entity as any))[0];
   }
 
-  public async create(entity: T): Promise<void> {
-    await knex<T>(this.tableName).insert(this.getInsertData(entity));
-  }
+  public async get(id: number): Promise<T>;
+  public async get(column: string, value: any): Promise<T[]>;
+  public async get(column: string, value: any, unique: true): Promise<T>;
+  public async get(
+    columnOrId: string | number,
+    value?: any,
+    unique?: true
+  ): Promise<T | T[]> {
+    if (typeof columnOrId === 'number') {
+      return await this.get('id', columnOrId, true);
+    }
 
-  public async getAll(): Promise<T[]> {
-    return (await knex<T>(this.tableName)) as T[];
-  }
+    if (unique) {
+      return (await knex<T>(this.tableName)
+        .where(columnOrId, value)
+        .first()) as T;
+    }
 
-  public async get(id: number): Promise<T> {
-    return (await knex<T>(this.tableName)
-      .where('Id', id)
-      .first()) as T;
+    return (await knex<T>(this.tableName).where(columnOrId, value)) as T[];
   }
-
-  protected abstract createTableCallback(table: CreateTableBuilder): any;
-  protected abstract getInsertData(entity: T): any;
 }

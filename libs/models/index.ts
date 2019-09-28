@@ -7,4 +7,5 @@ export * from './src/rosterEntry';
 export * from './src/seasonInfo';
 export * from './src/teamRecord';
 export * from './src/team';
+export * from './src/teamName';
 export * from './src/enums/position';

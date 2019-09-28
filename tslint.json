@@ -1,9 +1,18 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended", "tslint-config-airbnb", "tslint-config-prettier"],
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-airbnb",
+    "tslint-config-prettier"
+  ],
   "rules": {
     "interface-name": false,
     "object-literal-sort-keys": false,
-    "no-require-imports": true
+    "object-shorthand-properties-first": false,
+    "no-require-imports": true,
+    "array-type": [
+      true,
+      "array"
+    ]
   }
 }

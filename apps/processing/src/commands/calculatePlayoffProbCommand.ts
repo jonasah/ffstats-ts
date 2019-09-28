@@ -1,7 +1,9 @@
 import commandLineArgs from 'command-line-args';
 
+import { Service } from 'typedi';
 import { ICommand } from './command.interface';
 
+@Service()
 export class CalculatePlayoffProbCommand implements ICommand {
   public readonly name = 'calculate-playoff-prob';
 
@@ -35,7 +37,7 @@ export class CalculatePlayoffProbCommand implements ICommand {
     }
   }
 
-  public run(): void {
+  public async run(): Promise<void> {
     // TODO
   }
 }
