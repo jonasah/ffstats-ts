@@ -12,7 +12,7 @@ describe('getCommand', () => {
   let availableCommands: ICommand[];
 
   beforeAll(() => {
-    addScheduleCommand = new AddScheduleCommand();
+    addScheduleCommand = new AddScheduleCommand(null, null, null, null);
     addRostersCommand = new AddRostersCommand();
     calculateStandingsCommand = new CalculateStandingsCommand();
 
