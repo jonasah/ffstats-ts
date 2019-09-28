@@ -18,7 +18,7 @@ export class ProcessingApp implements IApp {
       try {
         return getCommand(this.availableCommands);
       } catch (e) {
-        this.logger.error(e.message);
+        this.logger.error(e.message, e.stack);
       }
     })();
 
@@ -29,7 +29,7 @@ export class ProcessingApp implements IApp {
     try {
       await command.run();
     } catch (e) {
-      this.logger.error(e.message);
+      this.logger.error(e.message, e.stack);
       return 1;
     }
 

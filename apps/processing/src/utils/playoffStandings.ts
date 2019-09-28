@@ -14,8 +14,8 @@ export class PlayoffStandings extends Standings {
     const gameScore1 = game.gameScores[0];
     const gameScore2 = game.gameScores[1];
 
-    const team1Record = this.getTeamRecord(gameScore1.teamId);
-    const team2Record = this.getTeamRecord(gameScore2.teamId);
+    const team1Record = this.getTeamRecord(gameScore1.team_id);
+    const team2Record = this.getTeamRecord(gameScore2.team_id);
 
     const bestRank = Math.min(team1Record.rank, team2Record.rank);
     const worstRank = Math.max(team1Record.rank, team2Record.rank);

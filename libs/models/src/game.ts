@@ -1,7 +1,7 @@
 import { GameScore } from './gameScore';
 
 export interface Game {
-  id?: number;
+  id: number;
   year: number;
   week: number;
 
