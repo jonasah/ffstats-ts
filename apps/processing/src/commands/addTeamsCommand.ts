@@ -52,7 +52,7 @@ export class AddTeamsCommand implements ICommand {
       teams.teams.map(async team => {
         const teamId = await (async () => {
           // check if team already exists for this owner
-          const existingTeam = await this.teamRepository.get('owner', team.owner, true);
+          const existingTeam = await this.teamRepository.get({ owner: team.owner }, true);
 
           if (existingTeam) {
             return existingTeam.id;

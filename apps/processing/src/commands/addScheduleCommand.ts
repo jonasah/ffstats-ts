@@ -104,7 +104,7 @@ export class AddScheduleCommand implements ICommand {
 
     await this.gameRepository.createWithGameScores(gamesToAdd);
 
-    if (!(await this.seasonInfoRepository.get('year', schedule.year, true))) {
+    if (!(await this.seasonInfoRepository.get({ year: schedule.year }, true))) {
       await this.seasonInfoRepository.create({
         year: schedule.year,
         num_teams: schedule.numTeams,

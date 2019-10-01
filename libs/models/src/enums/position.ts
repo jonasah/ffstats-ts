@@ -1,4 +1,4 @@
-export const enum Position {
+export enum Position {
   QB = 0,
   RB = 1,
   WR = 2,

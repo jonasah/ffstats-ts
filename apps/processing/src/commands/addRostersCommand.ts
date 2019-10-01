@@ -1,26 +1,53 @@
+import {
+  GameScoreRepository,
+  PlayerRepository,
+  RosterRepository,
+  TeamRepository
+} from '@ffstats/database';
+import { Logger } from '@ffstats/logger';
+import { Player, Position, RosterEntry } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
-
+import fs from 'fs';
 import { Service } from 'typedi';
+import { WeekRosters } from '../models/rosters';
 import { ICommand } from './command.interface';
+
+// key: player position, value: list of valid roster positions
+const validRosterPositions = new Map([
+  [Position.QB, [Position.QB, Position.BN, Position.RES]],
+  [Position.RB, [Position.RB, Position.FLX, Position.BN, Position.RES]],
+  [Position.WR, [Position.WR, Position.FLX, Position.BN, Position.RES]],
+  [Position.TE, [Position.TE, Position.BN, Position.RES]],
+  [Position.K, [Position.K, Position.BN, Position.RES]],
+  [Position.DEF, [Position.DEF, Position.BN]]
+]);
 
 @Service()
 export class AddRostersCommand implements ICommand {
   public readonly name = 'add-rosters';
 
-  private file: string;
-  private directory: string;
+  private files: string[];
+  private directories: string[];
+
+  constructor(
+    private readonly playerRepository: PlayerRepository,
+    private readonly rosterRepository: RosterRepository,
+    private readonly gameScoreRepository: GameScoreRepository,
+    private readonly teamRepository: TeamRepository,
+    private readonly logger: Logger
+  ) {}
 
   public parseArguments(args: string[]): void {
     const definitions: commandLineArgs.OptionDefinition[] = [
       {
         name: 'file',
         alias: 'f',
-        type: String
+        multiple: true
       },
       {
         name: 'directory',
         alias: 'd',
-        type: String
+        multiple: true
       }
     ];
 
@@ -28,15 +55,151 @@ export class AddRostersCommand implements ICommand {
       argv: args || []
     });
 
-    this.file = options.file;
-    this.directory = options.directory;
+    this.files = options.file || [];
+    this.directories = options.directory || [];
 
-    if (this.file == null && this.directory == null) {
-      throw new Error('No rosters file or directory specified');
+    if (this.files.length === 0 && this.directories.length === 0) {
+      this.logger.warn('No roster files or directories specified');
     }
   }
 
   public async run(): Promise<void> {
-    // TODO
+    for (const file of this.files) {
+      await this.addFromFile(file);
+    }
+
+    for (const directory of this.directories) {
+      await this.addFromDirectory(directory);
+    }
+  }
+
+  private async addFromFile(file: string, force?: boolean): Promise<void> {
+    this.logger.info(`Adding rosters from: ${file}`);
+
+    const rosters = JSON.parse(fs.readFileSync(file, 'utf-8')) as WeekRosters;
+
+    const weekExists = await this.rosterRepository.weekExists(rosters.year, rosters.week);
+
+    if (weekExists) {
+      if (force) {
+        // TODO: rosterHandler.deleteRostersInWeek(rosters.year, rosters.week)
+      } else {
+        return;
+      }
+    }
+
+    const players = new Map((await this.playerRepository.get()).map(p => [p.name, p]));
+
+    for (const roster of rosters.rosters) {
+      this.logger.info(` Adding roster for ${roster.team}`);
+
+      const team = await this.teamRepository.get({ owner: roster.team }, true);
+      const teamRosterEntries: Partial<RosterEntry>[] = [];
+
+      for (const entry of roster.entries) {
+        if (!players.has(entry.playerName)) {
+          const newPlayer: Pick<Player, 'name' | 'position'> = {
+            name: entry.playerName,
+            position: Position[entry.playerPosition]
+          };
+
+          players.set(newPlayer.name, {
+            id: await this.playerRepository.create(newPlayer),
+            ...newPlayer
+          });
+        }
+
+        const player = players.get(entry.playerName);
+
+        if (player.position !== Position[entry.playerPosition]) {
+          this.logger.warn(
+            `Position mismatch for ${player.name} in ${rosters.year} w${rosters.week}: ${player.position} != ${entry.playerPosition}`
+          );
+        }
+
+        teamRosterEntries.push({
+          year: rosters.year,
+          week: rosters.week,
+          team_id: team.id,
+          player_id: player.id,
+          position: Position[entry.rosterPosition],
+          points: entry.points,
+          is_bye_week: entry.isByeWeek || false
+        });
+      }
+
+      this.validateRoster(teamRosterEntries);
+
+      await this.rosterRepository.create(teamRosterEntries);
+    }
+
+    await this.calculateGameScores(rosters.year, rosters.week);
+  }
+
+  private async addFromDirectory(directory: string, force?: boolean): Promise<void> {
+    const dirFiles = fs.readdirSync(directory).filter(file => file.endsWith('.json'));
+
+    for (const file of dirFiles) {
+      await this.addFromFile(file, force);
+    }
+  }
+
+  private validateRoster(roster: Partial<RosterEntry>[]) {
+    // TODO: fix, Player is not set
+    // this.validateRosterPositions(roster);
+
+    this.validateNumStartersAtPosition(roster, Position.QB, 1);
+    this.validateNumStartersAtPosition(roster, Position.RB, 2);
+    this.validateNumStartersAtPosition(roster, Position.WR, 2);
+    this.validateNumStartersAtPosition(roster, Position.TE, 1);
+    this.validateNumStartersAtPosition(roster, Position.FLX, 1);
+    this.validateNumStartersAtPosition(roster, Position.K, 1);
+    this.validateNumStartersAtPosition(roster, Position.DEF, 1);
+  }
+
+  private validateNumStartersAtPosition(
+    roster: Partial<RosterEntry>[],
+    position: Position,
+    numStartersAtPosition: 1 | 2
+  ) {
+    const numEntries = roster.filter(re => re.position === position).length;
+
+    if (numEntries > numStartersAtPosition) {
+      throw new Error(`Too many starters at ${Position[position]}: ${numEntries}`);
+    }
+
+    if (numEntries < numStartersAtPosition) {
+      this.logger.warn(
+        `Too few starters at ${Position[position]}: ${numEntries} (this might not be an error)`
+      );
+    }
+  }
+
+  private validateRosterPositions(roster: Partial<RosterEntry>[]) {
+    roster.forEach(entry => {
+      if (!validRosterPositions.get(entry.Player.position).includes(entry.position)) {
+        throw new Error(
+          `Invalid roster position for ${entry.Player.name} (${entry.Player.position}): ${entry.position}`
+        );
+      }
+    });
+  }
+
+  private async calculateGameScores(year: number, week: number): Promise<void> {
+    this.logger.info(`Calculating game scores for ${year} week ${week}`);
+
+    const totalPointsPerTeam = await this.rosterRepository.getTotalPointsPerTeam(
+      year,
+      week
+    );
+
+    for (const teamPoints of totalPointsPerTeam) {
+      await this.gameScoreRepository.updatePoints(
+        year,
+        week,
+        teamPoints.teamId,
+        teamPoints.points
+      );
+    }
   }
 }
