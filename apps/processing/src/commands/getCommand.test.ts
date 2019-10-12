@@ -1,3 +1,4 @@
+import { mockLogger } from '../../../../libs/logger/src/logger.mock';
 import { AddRostersCommand } from './addRostersCommand';
 import { AddScheduleCommand } from './addScheduleCommand';
 import { CalculateStandingsCommand } from './calculateStandingsCommand';
@@ -12,9 +13,9 @@ describe('getCommand', () => {
   let availableCommands: ICommand[];
 
   beforeAll(() => {
-    addScheduleCommand = new AddScheduleCommand({} as any, {} as any);
-    addRostersCommand = new AddRostersCommand({} as any, {} as any);
-    calculateStandingsCommand = new CalculateStandingsCommand();
+    addScheduleCommand = new AddScheduleCommand({} as any, mockLogger);
+    addRostersCommand = new AddRostersCommand({} as any, mockLogger);
+    calculateStandingsCommand = new CalculateStandingsCommand({} as any, mockLogger);
 
     availableCommands = [
       addScheduleCommand,

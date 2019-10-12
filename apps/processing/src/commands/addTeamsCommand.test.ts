@@ -1,10 +1,5 @@
+import { mockLogger } from '../../../../libs/logger/src/logger.mock';
 import { AddTeamsCommand } from './addTeamsCommand';
-
-const mockLogger: any = {
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn()
-};
 
 describe('Add schedule command', () => {
   let command: AddTeamsCommand;

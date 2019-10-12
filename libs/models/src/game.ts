@@ -7,3 +7,5 @@ export interface Game {
 
   gameScores: GameScore[];
 }
+
+export const hasValidResult = (game: Game) => game.gameScores.every(gs => gs.points);

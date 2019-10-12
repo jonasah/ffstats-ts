@@ -1,10 +1,5 @@
+import { mockLogger } from '../../../../libs/logger/src/logger.mock';
 import { AddRostersCommand } from './addRostersCommand';
-
-const mockLogger: any = {
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn()
-};
 
 describe('Add rosters command', () => {
   let command: AddRostersCommand;

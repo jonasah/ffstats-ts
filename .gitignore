@@ -3,3 +3,4 @@ yarn-error.log
 *.code-workspace
 *.sqlite3
 *.db
+coverage

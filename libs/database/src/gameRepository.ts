@@ -39,4 +39,15 @@ export class GameRepository extends DbRepository<Game> {
       })
     );
   }
+
+  public async getByWeek(year: number, week: number): Promise<Game[]> {
+    return this.select({ year, week }).then(games =>
+      Promise.all(
+        games.map(async game => ({
+          ...game,
+          gameScores: await this.gameScoreRepository.select({ game_id: game.id })
+        }))
+      )
+    );
+  }
 }

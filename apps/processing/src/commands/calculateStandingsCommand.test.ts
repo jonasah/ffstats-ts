@@ -1,10 +1,11 @@
+import { mockLogger } from '../../../../libs/logger/src/logger.mock';
 import { CalculateStandingsCommand } from './calculateStandingsCommand';
 
 describe('Calculate standings command', () => {
   let command: CalculateStandingsCommand;
 
   beforeEach(() => {
-    command = new CalculateStandingsCommand();
+    command = new CalculateStandingsCommand({} as any, mockLogger);
   });
 
   it('should succeed on year and single week', () => {

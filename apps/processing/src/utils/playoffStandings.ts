@@ -1,11 +1,17 @@
 import { Game, TeamRecord } from '@ffstats/models';
-
 import { compareTo } from '../math/math';
 import { Standings } from './standings';
 
 export class PlayoffStandings extends Standings {
-  constructor(x: TeamRecord[] | Standings) {
-    super(x);
+  public static fromPreviousStandings(prevStandings: Standings): PlayoffStandings {
+    const standings = new PlayoffStandings(prevStandings.teamRecords);
+    standings.advanceWeek();
+    standings.setIsPlayoffs();
+    return standings;
+  }
+
+  public static fromTeamRecords(teamRecords: TeamRecord[]): PlayoffStandings {
+    return new PlayoffStandings(teamRecords);
   }
 
   public addResult(game: Game) {
@@ -32,5 +38,11 @@ export class PlayoffStandings extends Standings {
   public sortStandings() {
     // sort by rank
     this.teamRecords.sort((tr1, tr2) => compareTo(tr1.rank, tr2.rank));
+  }
+
+  private setIsPlayoffs() {
+    this.teamRecords.forEach(tr => {
+      tr.is_playoffs = true;
+    });
   }
 }

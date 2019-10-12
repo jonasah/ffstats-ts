@@ -1,87 +1,54 @@
-import { Game, Team, TeamRecord } from '@ffstats/models';
-
-import { PlayoffStandings } from './playoffStandings';
-import { RegularSeasonStandings } from './regularSeasonStandings';
+import { Game, Head2HeadRecord, TeamRecord } from '@ffstats/models';
 
 export abstract class Standings {
-  protected teamRecords: TeamRecord[];
+  protected constructor(public teamRecords: TeamRecord[]) {}
 
-  protected constructor(x: TeamRecord[] | Standings) {
-    if (x instanceof Standings) {
-      this.teamRecords = x.teamRecords;
-
-      this.advanceWeek();
-      this.setIdsToZero();
-    } else {
-      this.teamRecords = x;
-    }
-  }
-
-  public isValid() {
+  public isValid(): boolean {
     return this.teamRecords.length > 0;
   }
 
-  public addResult(game: Game) {
+  public addResult(game: Game): void {
     const gameScore1 = game.gameScores[0];
     const gameScore2 = game.gameScores[1];
+
+    const team1Record = this.getTeamRecord(gameScore1.team_id);
+    team1Record.points_for += gameScore1.points;
+    team1Record.points_against += gameScore2.points;
+
+    const team2Record = this.getTeamRecord(gameScore2.team_id);
+    team2Record.points_for += gameScore2.points;
+    team2Record.points_against += gameScore1.points;
+
+    const team1VsTeam2Record = this.getHead2HeadRecord(team1Record, team2Record.team_id);
+    const team2VsTeam1Record = this.getHead2HeadRecord(team2Record, team1Record.team_id);
+
+    if (gameScore1.points > gameScore2.points) {
+      team1Record.win += 1;
+      team2Record.loss += 1;
+
+      team1VsTeam2Record.win += 1;
+      team2VsTeam1Record.loss += 1;
+    } else {
+      team1Record.loss += 1;
+      team2Record.win += 1;
+
+      team1VsTeam2Record.loss += 1;
+      team2VsTeam1Record.win += 1;
+    }
   }
 
   public abstract sortStandings(): void;
 
-  public getHighestPointsForRecord() {
+  public getHighestPointsForRecord(): TeamRecord {
     return this.teamRecords.reduce(
       (acc, tr) => {
-        return acc.pointsFor > tr.pointsFor ? acc : tr;
+        return acc.points_for > tr.points_for ? acc : tr;
       },
       {} as TeamRecord
     );
   }
 
-  public getStandings(year: number, week: number) {
-    let teamRecords: TeamRecord[];
-
-    if (week === 0) {
-      // create default standings
-      const teams: Team[] = [];
-
-      teamRecords = [];
-
-      teams.forEach(team => {
-        teamRecords.push({
-          year,
-          week: 0,
-          teamId: team.id,
-          // create H2H records against eveny other team
-          head2HeadRecords: teams
-            .filter(t => t.id !== team.id)
-            .map(t => ({
-              Year: year,
-              Week: week,
-              TeamId: team.id,
-              OpponentId: t.id
-            }))
-        });
-      });
-    } else {
-      teamRecords = []; // TeamRecordHandler.GetTeamRecordsByWeek(year, week);
-    }
-
-    if (week <= SeasonInfoHandler.GetSeason(year).RegularSeasonLength) {
-      return new RegularSeasonStandings(teamRecords);
-    }
-
-    return new PlayoffStandings(teamRecords);
-  }
-
-  protected getTeamRecord(teamId: number) {
-    return this.teamRecords.find(tr => tr.teamId === teamId);
-  }
-
-  protected getHead2HeadRecord(teamRecord: TeamRecord, opponentId: number) {
-    return teamRecord.head2HeadRecords.find(h2h => h2h.opponentId === opponentId);
-  }
-
-  private advanceWeek() {
+  protected advanceWeek(): void {
     this.teamRecords.forEach(teamRecord => {
       teamRecord.week += 1;
 
@@ -91,13 +58,14 @@ export abstract class Standings {
     });
   }
 
-  private setIdsToZero() {
-    this.teamRecords.forEach(teamRecord => {
-      teamRecord.id = 0;
+  protected getTeamRecord(teamId: number): TeamRecord {
+    return this.teamRecords.find(tr => tr.team_id === teamId);
+  }
 
-      teamRecord.head2HeadRecords.forEach(h2hRecord => {
-        h2hRecord.id = 0;
-      });
-    });
+  protected getHead2HeadRecord(
+    teamRecord: TeamRecord,
+    opponentId: number
+  ): Head2HeadRecord {
+    return teamRecord.head2HeadRecords.find(h2h => h2h.opponent_id === opponentId);
   }
 }

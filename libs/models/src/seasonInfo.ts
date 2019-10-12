@@ -13,3 +13,6 @@ export interface SeasonInfo {
   highest_points_for_team_id?: number;
   highest_points_for: number;
 }
+
+export const seasonLength = (seasonInfo: SeasonInfo) =>
+  seasonInfo.regular_season_length + seasonInfo.playoff_length;
