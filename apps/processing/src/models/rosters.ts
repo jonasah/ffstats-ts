@@ -2,8 +2,8 @@ import { Position } from '@ffstats/models';
 
 export interface RosterEntry {
   playerName: string;
-  playerPosition: string; // NOTE: can we serialize to Position?
-  rosterPosition: string; // NOTE: can we serialize to Position?
+  playerPosition: keyof typeof Position; // NOTE: can we serialize to Position?
+  rosterPosition: keyof typeof Position; // NOTE: can we serialize to Position?
   points?: number;
   isByeWeek: boolean;
 }
