@@ -1,7 +1,10 @@
-import { Game, Head2HeadRecord, TeamRecord } from '@ffstats/models';
+import { Game, Head2HeadRecord, TeamRecord, Tiebreaker } from '@ffstats/models';
 
 export abstract class Standings {
-  protected constructor(public teamRecords: TeamRecord[]) {}
+  protected constructor(
+    public teamRecords: TeamRecord[],
+    public readonly tiebreaker: Tiebreaker
+  ) {}
 
   public isValid(): boolean {
     return this.teamRecords.length > 0;

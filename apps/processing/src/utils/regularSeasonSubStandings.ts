@@ -1,10 +1,5 @@
-import { TeamRecord } from '@ffstats/models';
+import { TeamRecord, Tiebreaker } from '@ffstats/models';
 import { compareTo, fuzzyCompareEqual, pct } from '../math/math';
-
-export const enum Tiebreaker {
-  Head2HeadRecords,
-  PointsFor
-}
 
 export class RegularSeasonSubStandings {
   public readonly teamRecords: TeamRecord[] = [];

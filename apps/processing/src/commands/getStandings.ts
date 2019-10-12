@@ -51,8 +51,8 @@ export async function getStandings(
   const seasonInfo = await dbContext.seasonInfo.select({ year }, true);
 
   if (week <= seasonInfo.regular_season_length) {
-    return RegularSeasonStandings.fromTeamRecords(teamRecords);
+    return RegularSeasonStandings.fromTeamRecords(teamRecords, seasonInfo.tiebreaker);
   }
 
-  return PlayoffStandings.fromTeamRecords(teamRecords);
+  return PlayoffStandings.fromTeamRecords(teamRecords, seasonInfo.tiebreaker);
 }

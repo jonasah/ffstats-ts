@@ -1,6 +1,6 @@
 import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
-import { Game } from '@ffstats/models';
+import { Game, Tiebreaker } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import { Service } from 'typedi';
@@ -105,7 +105,8 @@ export class AddScheduleCommand implements ICommand {
         num_teams: schedule.numTeams,
         num_playoff_teams: schedule.numPlayoffTeams,
         regular_season_length: schedule.regularSeasonLength,
-        playoff_length: schedule.playoffLength
+        playoff_length: schedule.playoffLength,
+        tiebreaker: Tiebreaker[schedule.tiebreaker]
       });
     }
   }

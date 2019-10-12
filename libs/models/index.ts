@@ -1,4 +1,5 @@
 export * from './src/enums/position';
+export * from './src/enums/tiebreaker';
 export * from './src/game';
 export * from './src/gameScore';
 export * from './src/head2HeadRecord';

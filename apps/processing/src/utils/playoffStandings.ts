@@ -1,17 +1,23 @@
-import { Game, TeamRecord } from '@ffstats/models';
+import { Game, TeamRecord, Tiebreaker } from '@ffstats/models';
 import { compareTo } from '../math/math';
 import { Standings } from './standings';
 
 export class PlayoffStandings extends Standings {
   public static fromPreviousStandings(prevStandings: Standings): PlayoffStandings {
-    const standings = new PlayoffStandings(prevStandings.teamRecords);
+    const standings = new PlayoffStandings(
+      prevStandings.teamRecords,
+      prevStandings.tiebreaker
+    );
     standings.advanceWeek();
     standings.setIsPlayoffs();
     return standings;
   }
 
-  public static fromTeamRecords(teamRecords: TeamRecord[]): PlayoffStandings {
-    return new PlayoffStandings(teamRecords);
+  public static fromTeamRecords(
+    teamRecords: TeamRecord[],
+    tiebreaker: Tiebreaker
+  ): PlayoffStandings {
+    return new PlayoffStandings(teamRecords, tiebreaker);
   }
 
   public addResult(game: Game) {

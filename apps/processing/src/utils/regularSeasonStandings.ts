@@ -1,17 +1,23 @@
-import { TeamRecord } from '@ffstats/models';
+import { TeamRecord, Tiebreaker } from '@ffstats/models';
 import { compareTo, fuzzyCompareEqual, pct } from '../math/math';
-import { RegularSeasonSubStandings, Tiebreaker } from './regularSeasonSubStandings';
+import { RegularSeasonSubStandings } from './regularSeasonSubStandings';
 import { Standings } from './standings';
 
 export class RegularSeasonStandings extends Standings {
   public static fromPreviousStandings(prevStandings: Standings): RegularSeasonStandings {
-    const standings = new RegularSeasonStandings(prevStandings.teamRecords);
+    const standings = new RegularSeasonStandings(
+      prevStandings.teamRecords,
+      prevStandings.tiebreaker
+    );
     standings.advanceWeek();
     return standings;
   }
 
-  public static fromTeamRecords(teamRecords: TeamRecord[]): RegularSeasonStandings {
-    return new RegularSeasonStandings(teamRecords);
+  public static fromTeamRecords(
+    teamRecords: TeamRecord[],
+    tiebreaker: Tiebreaker
+  ): RegularSeasonStandings {
+    return new RegularSeasonStandings(teamRecords, tiebreaker);
   }
 
   public sortStandings() {
@@ -20,8 +26,7 @@ export class RegularSeasonStandings extends Standings {
 
     // divide into sub-standings where each has the same percentage
     const subStandings = [
-      // TODO: tiebreaker type
-      new RegularSeasonSubStandings(this.teamRecords[0], Tiebreaker.Head2HeadRecords)
+      new RegularSeasonSubStandings(this.teamRecords[0], this.tiebreaker)
     ];
 
     for (let i = 1; i < this.teamRecords.length; i += 1) {
@@ -31,10 +36,7 @@ export class RegularSeasonStandings extends Standings {
       if (fuzzyCompareEqual(pct(team1), pct(team2))) {
         subStandings[subStandings.length - 1].add(team2);
       } else {
-        subStandings.push(
-          // TODO: tiebreaker type
-          new RegularSeasonSubStandings(team2, Tiebreaker.Head2HeadRecords)
-        );
+        subStandings.push(new RegularSeasonSubStandings(team2, this.tiebreaker));
       }
     }
 

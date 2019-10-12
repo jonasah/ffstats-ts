@@ -1,3 +1,5 @@
+import { Tiebreaker } from './enums/tiebreaker';
+
 export interface SeasonInfo {
   id: number;
   year: number;
@@ -12,6 +14,7 @@ export interface SeasonInfo {
   regular_season_champion_id?: number;
   highest_points_for_team_id?: number;
   highest_points_for: number;
+  tiebreaker: Tiebreaker;
 }
 
 export const seasonLength = (seasonInfo: SeasonInfo) =>
