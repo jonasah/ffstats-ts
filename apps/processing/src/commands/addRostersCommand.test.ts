@@ -10,13 +10,7 @@ describe('Add rosters command', () => {
   let command: AddRostersCommand;
 
   beforeEach(() => {
-    command = new AddRostersCommand(
-      {} as any,
-      {} as any,
-      {} as any,
-      {} as any,
-      mockLogger
-    );
+    command = new AddRostersCommand({} as any, mockLogger);
   });
 
   it('should succeed with single file argument', () => {

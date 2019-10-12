@@ -12,8 +12,8 @@ describe('getCommand', () => {
   let availableCommands: ICommand[];
 
   beforeAll(() => {
-    addScheduleCommand = new AddScheduleCommand(null, null, null, null);
-    addRostersCommand = new AddRostersCommand();
+    addScheduleCommand = new AddScheduleCommand({} as any, {} as any);
+    addRostersCommand = new AddRostersCommand({} as any, {} as any);
     calculateStandingsCommand = new CalculateStandingsCommand();
 
     availableCommands = [

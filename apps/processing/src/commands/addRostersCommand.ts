@@ -1,9 +1,4 @@
-import {
-  GameScoreRepository,
-  PlayerRepository,
-  RosterRepository,
-  TeamRepository
-} from '@ffstats/database';
+import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
 import { Player, Position, RosterEntry } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
@@ -29,13 +24,7 @@ export class AddRostersCommand implements ICommand {
   private files: string[];
   private directories: string[];
 
-  constructor(
-    private readonly playerRepository: PlayerRepository,
-    private readonly rosterRepository: RosterRepository,
-    private readonly gameScoreRepository: GameScoreRepository,
-    private readonly teamRepository: TeamRepository,
-    private readonly logger: Logger
-  ) {}
+  constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
 
   public parseArguments(args: string[]): void {
     const definitions: commandLineArgs.OptionDefinition[] = [
@@ -78,22 +67,27 @@ export class AddRostersCommand implements ICommand {
 
     const rosters = JSON.parse(fs.readFileSync(file, 'utf-8')) as WeekRosters;
 
-    const weekExists = await this.rosterRepository.weekExists(rosters.year, rosters.week);
+    const weekExists = await this.dbContext.rosters.weekExists(
+      rosters.year,
+      rosters.week
+    );
 
     if (weekExists) {
       if (force) {
-        // TODO: rosterHandler.deleteRostersInWeek(rosters.year, rosters.week)
+        await this.dbContext.rosters.delete({ year: rosters.year, week: rosters.week });
       } else {
         return;
       }
     }
 
-    const players = new Map((await this.playerRepository.get()).map(p => [p.name, p]));
+    const players = new Map(
+      (await this.dbContext.players.select()).map(p => [p.name, p])
+    );
 
     for (const roster of rosters.rosters) {
       this.logger.info(` Adding roster for ${roster.team}`);
 
-      const team = await this.teamRepository.get({ owner: roster.team }, true);
+      const team = await this.dbContext.teams.select({ owner: roster.team }, true);
       const teamRosterEntries: Partial<RosterEntry>[] = [];
 
       for (const entry of roster.entries) {
@@ -104,7 +98,7 @@ export class AddRostersCommand implements ICommand {
           };
 
           players.set(newPlayer.name, {
-            id: await this.playerRepository.create(newPlayer),
+            id: await this.dbContext.players.insert(newPlayer),
             ...newPlayer
           });
         }
@@ -130,7 +124,7 @@ export class AddRostersCommand implements ICommand {
 
       this.validateRoster(teamRosterEntries);
 
-      await this.rosterRepository.create(teamRosterEntries);
+      await this.dbContext.rosters.insert(teamRosterEntries);
     }
 
     await this.calculateGameScores(rosters.year, rosters.week);
@@ -188,13 +182,13 @@ export class AddRostersCommand implements ICommand {
   private async calculateGameScores(year: number, week: number): Promise<void> {
     this.logger.info(`Calculating game scores for ${year} week ${week}`);
 
-    const totalPointsPerTeam = await this.rosterRepository.getTotalPointsPerTeam(
+    const totalPointsPerTeam = await this.dbContext.rosters.getTotalPointsPerTeam(
       year,
       week
     );
 
     for (const teamPoints of totalPointsPerTeam) {
-      await this.gameScoreRepository.updatePoints(
+      await this.dbContext.gameScores.updatePoints(
         year,
         week,
         teamPoints.teamId,

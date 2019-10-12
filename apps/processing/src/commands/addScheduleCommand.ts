@@ -1,4 +1,4 @@
-import { GameRepository, SeasonInfoRepository, TeamRepository } from '@ffstats/database';
+import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
 import { Game } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
@@ -13,12 +13,7 @@ export class AddScheduleCommand implements ICommand {
 
   private files: string[];
 
-  constructor(
-    private readonly teamRepository: TeamRepository,
-    private readonly gameRepository: GameRepository,
-    private readonly seasonInfoRepository: SeasonInfoRepository,
-    private readonly logger: Logger
-  ) {}
+  constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
 
   public parseArguments(args: string[]): void {
     const definitions: commandLineArgs.OptionDefinition[] = [
@@ -50,7 +45,7 @@ export class AddScheduleCommand implements ICommand {
   private async addSchedule(scheduleFile: string, force: boolean = false): Promise<void> {
     const schedule = JSON.parse(fs.readFileSync(scheduleFile, 'utf-8')) as Schedule;
 
-    let weeksInDb = await this.gameRepository.getWeeksInYear(schedule.year);
+    let weeksInDb = await this.dbContext.games.getWeeksInYear(schedule.year);
 
     if (weeksInDb.length > 0 && force) {
       // TODO: delete games in db
@@ -58,7 +53,7 @@ export class AddScheduleCommand implements ICommand {
     }
 
     const teams = new Map(
-      (await this.teamRepository.get()).map(team => [team.owner, team])
+      (await this.dbContext.teams.select()).map(team => [team.owner, team])
     );
     const gamesToAdd: Pick<Game, 'year' | 'week' | 'gameScores'>[] = [];
 
@@ -102,10 +97,10 @@ export class AddScheduleCommand implements ICommand {
       });
     });
 
-    await this.gameRepository.createWithGameScores(gamesToAdd);
+    await this.dbContext.games.insertWithGameScores(gamesToAdd);
 
-    if (!(await this.seasonInfoRepository.get({ year: schedule.year }, true))) {
-      await this.seasonInfoRepository.create({
+    if (!(await this.dbContext.seasonInfo.select({ year: schedule.year }, true))) {
+      await this.dbContext.seasonInfo.insert({
         year: schedule.year,
         num_teams: schedule.numTeams,
         num_playoff_teams: schedule.numPlayoffTeams,

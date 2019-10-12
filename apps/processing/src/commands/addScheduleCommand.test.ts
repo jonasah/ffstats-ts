@@ -10,7 +10,7 @@ describe('Add schedule command', () => {
   let command: AddScheduleCommand;
 
   beforeEach(() => {
-    command = new AddScheduleCommand({} as any, {} as any, {} as any, mockLogger);
+    command = new AddScheduleCommand({} as any, mockLogger);
   });
 
   it('should succeed with single file argument', () => {

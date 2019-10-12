@@ -16,21 +16,19 @@ export class GameRepository extends DbRepository<Game> {
       .where('year', year)).map(g => g.week);
   }
 
-  public async createWithGameScores(
-    games: Pick<Game, 'year' | 'week' | 'gameScores'>[]
-  ): Promise<void> {
+  public async insertWithGameScores(games: Omit<Game, 'id'>[]): Promise<void> {
     // TODO: db transaction
 
     await Promise.all(
       games.map(async game => {
-        const gameId = await this.create({
+        const gameId = await this.insert({
           year: game.year,
           week: game.week
         });
 
         await Promise.all(
           game.gameScores.map(async gs => {
-            await this.gameScoreRepository.create({
+            await this.gameScoreRepository.insert({
               year: gs.year,
               week: gs.week,
               team_id: gs.team_id,

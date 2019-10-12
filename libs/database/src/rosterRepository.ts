@@ -10,8 +10,7 @@ export class RosterRepository extends DbRepository<RosterEntry> {
   }
 
   public async weekExists(year: number, week: number): Promise<boolean> {
-    // TODO: use exists query
-    return this.get({ year, week }).then(entries => entries.length > 0);
+    return this.count({ year, week }).then(count => count > 0);
   }
 
   public async getTotalPointsPerTeam(

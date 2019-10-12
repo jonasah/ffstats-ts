@@ -1,4 +1,4 @@
-import { TeamNameRepository, TeamRepository } from '@ffstats/database';
+import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
@@ -12,11 +12,7 @@ export class AddTeamsCommand implements ICommand {
 
   private files: string[];
 
-  constructor(
-    private readonly teamRepository: TeamRepository,
-    private readonly teamNameRepository: TeamNameRepository,
-    private readonly logger: Logger
-  ) {}
+  constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
 
   public parseArguments(args: string[]): void {
     const definitions: commandLineArgs.OptionDefinition[] = [
@@ -52,7 +48,10 @@ export class AddTeamsCommand implements ICommand {
       teams.teams.map(async team => {
         const teamId = await (async () => {
           // check if team already exists for this owner
-          const existingTeam = await this.teamRepository.get({ owner: team.owner }, true);
+          const existingTeam = await this.dbContext.teams.select(
+            { owner: team.owner },
+            true
+          );
 
           if (existingTeam) {
             return existingTeam.id;
@@ -60,14 +59,14 @@ export class AddTeamsCommand implements ICommand {
 
           // create new team
           this.logger.info(`Create team for ${team.owner}`);
-          return await this.teamRepository.create({ owner: team.owner });
+          return await this.dbContext.teams.insert({ owner: team.owner });
         })();
 
         // TODO: check if team name already exists
         this.logger.info(
           `Set team name "${team.name}" for ${team.owner} in ${teams.year}`
         );
-        await this.teamNameRepository.create({
+        await this.dbContext.teamNames.insert({
           team_id: teamId,
           year: teams.year,
           name: team.name
