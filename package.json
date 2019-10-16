@@ -12,6 +12,7 @@
     "husky": "^3.0.5",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
+    "pretty-quick": "^2.0.0",
     "ts-jest": "^24.1.0",
     "tslint": "^5.20.0",
     "tslint-config-airbnb": "^5.11.2",
@@ -27,6 +28,7 @@
     "test:silent": "jest --silent",
     "format:check": "prettier --check \"**/*.ts\"",
     "format:fix": "prettier --list-different --write \"**/*.ts\"",
+    "format:fix:staged": "pretty-quick --staged",
     "lint:check": "tslint --project .",
     "lint:fix": "tslint --project . --fix",
     "db:migrate:make": "knex migrate:make -x ts",
@@ -35,7 +37,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run-s -y format:fix lint:fix",
+      "pre-commit": "yarn run-s -y format:fix:staged lint:fix",
       "pre-push": "yarn run-p -y test:silent format:check lint:check"
     }
   }
