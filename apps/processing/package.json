@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "command-line-args": "^5.1.1",
-    "knex": "^0.19.4",
+    "knex": "^0.19.5",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^4.1.0",
     "typedi": "^0.8.0",
