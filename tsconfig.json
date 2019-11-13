@@ -5,6 +5,7 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "noImplicitReturns": true,
     "baseUrl": ".",
     "paths": {
       "@ffstats/*": ["libs/*"]

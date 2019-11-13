@@ -20,6 +20,8 @@ export class ProcessingApp implements IApp {
       } catch (e) {
         this.logger.error(e.message, e.stack);
       }
+
+      return undefined;
     })();
 
     if (command == null) {
