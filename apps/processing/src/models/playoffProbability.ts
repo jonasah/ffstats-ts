@@ -1,7 +1,7 @@
 export interface PlayoffProbability {
   team: string;
-  excludingTiebreakers: boolean;
-  includingTiebreakers: boolean;
+  excludingTiebreakers: number;
+  includingTiebreakers: number;
 }
 
 export interface PlayoffProbabilities {
