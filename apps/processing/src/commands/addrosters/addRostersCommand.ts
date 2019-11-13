@@ -3,6 +3,7 @@ import { Logger } from '@ffstats/logger';
 import { Player, Position, RosterEntry } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
+import path from 'path';
 import { Service } from 'typedi';
 import { WeekRosters } from '../../models/rosters';
 import { ICommand } from '../command.interface';
@@ -131,7 +132,10 @@ export class AddRostersCommand implements ICommand {
   }
 
   private async addFromDirectory(directory: string, force?: boolean): Promise<void> {
-    const dirFiles = fs.readdirSync(directory).filter(file => file.endsWith('.json'));
+    const dirFiles = fs
+      .readdirSync(directory)
+      .filter(file => file.endsWith('.json'))
+      .map(file => path.join(directory, file));
 
     for (const file of dirFiles) {
       await this.addFromFile(file, force);
