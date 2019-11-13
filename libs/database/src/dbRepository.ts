@@ -5,21 +5,12 @@ export abstract class DbRepository<T extends { id: number }> implements IDbRepos
   protected constructor(protected readonly tableName: string) {}
 
   public async insert(entity: Partial<T> | Partial<T>[]): Promise<number> {
-    let entityWithoutId: any;
-
     // make sure we don't try to insert id
-    if (entity instanceof Array) {
-      entityWithoutId = entity.map(e => {
-        const { id, ...rest } = e;
-        return rest;
-      });
-    } else {
-      const { id, ...rest } = entity;
-      entityWithoutId = rest;
-    }
+    const entityWithoutId =
+      entity instanceof Array ? entity.map(e => this.removeId(e)) : this.removeId(entity);
 
     return knex<T>(this.tableName)
-      .insert(entityWithoutId)
+      .insert(entityWithoutId as any)
       .then(id => id[0]);
   }
 
@@ -54,7 +45,7 @@ export abstract class DbRepository<T extends { id: number }> implements IDbRepos
 
   public async update(where: Partial<T>, data: Partial<T>): Promise<void> {
     // make sure we don't try to update id
-    const { id, ...dataWithoutId } = data;
+    const dataWithoutId = this.removeId(data);
 
     return knex<T>(this.tableName)
       .where(where)
@@ -65,5 +56,10 @@ export abstract class DbRepository<T extends { id: number }> implements IDbRepos
     return knex<T>(this.tableName)
       .where(where)
       .del();
+  }
+
+  private removeId(obj: Partial<T>): Omit<Partial<T>, 'id'> {
+    const { id, ...rest } = obj;
+    return rest;
   }
 }
