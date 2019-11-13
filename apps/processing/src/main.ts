@@ -2,12 +2,12 @@ import 'reflect-metadata';
 
 import { Container } from 'typedi';
 
-import { AddPlayoffProbCommand } from './commands/addPlayoffProbCommand';
-import { AddRostersCommand } from './commands/addRostersCommand';
-import { AddScheduleCommand } from './commands/addScheduleCommand';
-import { AddTeamsCommand } from './commands/addTeamsCommand';
-import { CalculatePlayoffProbCommand } from './commands/calculatePlayoffProbCommand';
-import { CalculateStandingsCommand } from './commands/calculateStandingsCommand';
+import { AddPlayoffProbCommand } from './commands/addplayoffprob/addPlayoffProbCommand';
+import { AddRostersCommand } from './commands/addrosters/addRostersCommand';
+import { AddScheduleCommand } from './commands/addschedule/addScheduleCommand';
+import { AddTeamsCommand } from './commands/addteams/addTeamsCommand';
+import { CalculatePlayoffProbCommand } from './commands/calculateplayoffprob/calculatePlayoffProbCommand';
+import { CalculateStandingsCommand } from './commands/calculatestandings/calculateStandingsCommand';
 import { commandsToken, ProcessingApp } from './processingApp';
 
 Container.set(commandsToken, [

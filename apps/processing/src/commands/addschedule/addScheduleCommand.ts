@@ -4,8 +4,8 @@ import { Game, Tiebreaker } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import { Service } from 'typedi';
-import { Schedule } from '../models/schedule';
-import { ICommand } from './command.interface';
+import { Schedule } from '../../models/schedule';
+import { ICommand } from '../command.interface';
 
 @Service()
 export class AddScheduleCommand implements ICommand {

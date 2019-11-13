@@ -1,7 +1,7 @@
 import commandLineArgs from 'command-line-args';
 
 import { Service } from 'typedi';
-import { ICommand } from './command.interface';
+import { ICommand } from '../command.interface';
 
 @Service()
 export class AddPlayoffProbCommand implements ICommand {

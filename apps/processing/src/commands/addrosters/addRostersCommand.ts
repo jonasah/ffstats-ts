@@ -4,8 +4,8 @@ import { Player, Position, RosterEntry } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import { Service } from 'typedi';
-import { WeekRosters } from '../models/rosters';
-import { ICommand } from './command.interface';
+import { WeekRosters } from '../../models/rosters';
+import { ICommand } from '../command.interface';
 
 // key: player position, value: list of valid roster positions
 const validRosterPositions = new Map([

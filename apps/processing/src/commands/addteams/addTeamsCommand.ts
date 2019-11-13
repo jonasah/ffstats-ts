@@ -3,8 +3,8 @@ import { Logger } from '@ffstats/logger';
 import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import { Service } from 'typedi';
-import { SeasonTeams } from '../models/seasonTeams';
-import { ICommand } from './command.interface';
+import { SeasonTeams } from '../../models/seasonTeams';
+import { ICommand } from '../command.interface';
 
 @Service()
 export class AddTeamsCommand implements ICommand {

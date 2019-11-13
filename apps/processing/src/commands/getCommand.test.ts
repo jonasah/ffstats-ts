@@ -1,7 +1,7 @@
 import { mockLogger } from '../../../../libs/logger/src/logger.mock';
-import { AddRostersCommand } from './addRostersCommand';
-import { AddScheduleCommand } from './addScheduleCommand';
-import { CalculateStandingsCommand } from './calculateStandingsCommand';
+import { AddRostersCommand } from './addrosters/addRostersCommand';
+import { AddScheduleCommand } from './addschedule/addScheduleCommand';
+import { CalculateStandingsCommand } from './calculatestandings/calculateStandingsCommand';
 import { ICommand } from './command.interface';
 import { getCommand } from './getCommand';
 

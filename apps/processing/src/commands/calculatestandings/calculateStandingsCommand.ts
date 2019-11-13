@@ -3,10 +3,10 @@ import { Logger } from '@ffstats/logger';
 import { hasValidResult, seasonLength } from '@ffstats/models';
 import commandLineArgs from 'command-line-args';
 import { Service } from 'typedi';
-import { PlayoffStandings } from '../utils/playoffStandings';
-import { RegularSeasonStandings } from '../utils/regularSeasonStandings';
-import { Standings } from '../utils/standings';
-import { ICommand } from './command.interface';
+import { PlayoffStandings } from '../../utils/playoffStandings';
+import { RegularSeasonStandings } from '../../utils/regularSeasonStandings';
+import { Standings } from '../../utils/standings';
+import { ICommand } from '../command.interface';
 import { getStandings } from './getStandings';
 
 @Service()

@@ -1,4 +1,4 @@
-import { mockLogger } from '../../../../libs/logger/src/logger.mock';
+import { mockLogger } from '../../../../../libs/logger/src/logger.mock';
 import { AddRostersCommand } from './addRostersCommand';
 
 describe('Add rosters command', () => {

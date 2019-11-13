@@ -1,8 +1,8 @@
 import { DbContext } from '@ffstats/database';
 import { TeamRecord } from '@ffstats/models';
-import { PlayoffStandings } from '../utils/playoffStandings';
-import { RegularSeasonStandings } from '../utils/regularSeasonStandings';
-import { Standings } from '../utils/standings';
+import { PlayoffStandings } from '../../utils/playoffStandings';
+import { RegularSeasonStandings } from '../../utils/regularSeasonStandings';
+import { Standings } from '../../utils/standings';
 
 export async function getStandings(
   year: number,

@@ -1,22 +1,22 @@
-import { mockLogger } from '../../../../libs/logger/src/logger.mock';
-import { AddTeamsCommand } from './addTeamsCommand';
+import { mockLogger } from '../../../../../libs/logger/src/logger.mock';
+import { AddScheduleCommand } from './addScheduleCommand';
 
 describe('Add schedule command', () => {
-  let command: AddTeamsCommand;
+  let command: AddScheduleCommand;
 
   beforeEach(() => {
-    command = new AddTeamsCommand({} as any, mockLogger);
+    command = new AddScheduleCommand({} as any, mockLogger);
   });
 
   it('should succeed with single file argument', () => {
-    const args = ['teams-file.json'];
+    const args = ['schedule-file.json'];
     expect(() => {
       command.parseArguments(args);
     }).not.toThrow();
   });
 
   it('should succeed with multiple file arguments', () => {
-    const args = ['teams-file1.json', 'teams-file2.json'];
+    const args = ['schedule-file1.json', 'schedule-file2.json'];
     expect(() => {
       command.parseArguments(args);
     }).not.toThrow();
