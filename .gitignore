@@ -4,3 +4,5 @@ yarn-error.log
 *.sqlite3
 *.db
 coverage
+input
+output

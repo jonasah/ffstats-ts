@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "private": true,
   "workspaces": [
-    "apps/processing"
+    "apps/*"
   ],
   "devDependencies": {
     "@types/jest": "^24.0.18",
@@ -23,6 +23,7 @@
   "scripts": {
     "start": "yarn start:processing",
     "start:processing": "yarn workspace @ffstats/processing run start",
+    "start:convertroster": "yarn workspace @ffstats/convertroster run start",
     "build": "echo nope",
     "test": "jest",
     "test:silent": "jest --silent",
