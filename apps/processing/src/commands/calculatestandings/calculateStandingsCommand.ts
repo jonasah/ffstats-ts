@@ -114,5 +114,7 @@ export class CalculateStandingsCommand implements ICommand {
     }
 
     await this.dbContext.seasonInfo.update({ id: seasonInfo.id }, seasonInfo);
+
+    return newStandings;
   }
 }
