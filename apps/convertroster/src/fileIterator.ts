@@ -21,7 +21,8 @@ export class FileIterator {
     const lines = fs
       .readFileSync(path)
       .toString()
-      .split('\n');
+      .split('\n')
+      .map(line => line.replace('\r', ''));
 
     for (const line of lines) {
       yield line;
