@@ -89,6 +89,10 @@ export class ConvertRosterApp implements IApp {
           it
         );
 
+        if (entry == null) {
+          continue;
+        }
+
         // fix names for relocated teams
         if (entry.playerName === 'Los Angeles Rams' && year < 2016) {
           entry.playerName = 'St. Louis Rams';
