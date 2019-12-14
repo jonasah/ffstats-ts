@@ -21,8 +21,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}
 
-      - run: yarn format:check
-
       - run: yarn lint:check
 
       - run: yarn db:migrate:latest
