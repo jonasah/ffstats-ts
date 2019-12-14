@@ -1,6 +1,6 @@
 import * as Knex from 'knex';
 
-export async function up(knex: Knex): Promise<any> {
+export async function up(knex: Knex) {
   return knex.schema.createTable('playoff_probabilities', table => {
     table.increments('id');
     table.integer('year').notNullable();
@@ -14,6 +14,6 @@ export async function up(knex: Knex): Promise<any> {
   });
 }
 
-export async function down(knex: Knex): Promise<any> {
+export async function down(knex: Knex) {
   return knex.schema.dropTable('playoff_probabilities');
 }

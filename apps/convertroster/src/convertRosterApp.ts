@@ -55,7 +55,7 @@ export class ConvertRosterApp implements IApp {
 
     // extract year and week from file name
     const fileName = path.basename(filePath, '.txt');
-    const fileNameMatch = fileName.match(/(\d{4})-w(\d{1,2})/);
+    const fileNameMatch = /(\d{4})-w(\d{1,2})/.exec(fileName);
     const year = parseInt(fileNameMatch[1], 10);
     const week = parseInt(fileNameMatch[2], 10);
 
@@ -146,7 +146,7 @@ export class ConvertRosterApp implements IApp {
 
     // extract player name and position from player line
     // (assume player name ends with lowercase character)
-    const playerMatch = playerLine.match(/([A-Za-z0-9' \.-]+[a-z])([A-Z]{1,3})(\s|View)/);
+    const playerMatch = /([A-Za-z0-9' \.-]+[a-z])([A-Z]{1,3})(\s|View)/.exec(playerLine);
     entry.playerName = playerMatch[1];
     entry.playerPosition = playerMatch[2] as OutputRosterPosition;
 

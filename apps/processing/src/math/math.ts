@@ -1,5 +1,7 @@
+const fuzzyCompareThreshold = 1e-7;
+
 export function fuzzyCompareEqual(val1: number, val2: number): boolean {
-  return Math.abs(val1 - val2) < 1e-7;
+  return Math.abs(val1 - val2) < fuzzyCompareThreshold;
 }
 
 export function compareTo(val1: number, val2: number): number {

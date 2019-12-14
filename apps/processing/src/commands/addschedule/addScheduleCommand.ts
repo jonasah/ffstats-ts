@@ -42,7 +42,7 @@ export class AddScheduleCommand implements ICommand {
     }
   }
 
-  private async addSchedule(scheduleFile: string, force: boolean = false): Promise<void> {
+  private async addSchedule(scheduleFile: string, force = false): Promise<void> {
     const schedule = JSON.parse(fs.readFileSync(scheduleFile, 'utf-8')) as Schedule;
 
     let weeksInDb = await this.dbContext.games.getWeeksInYear(schedule.year);

@@ -147,7 +147,9 @@ export class AddRostersCommand implements ICommand {
     // this.validateRosterPositions(roster);
 
     this.validateNumStartersAtPosition(roster, Position.QB, 1);
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.validateNumStartersAtPosition(roster, Position.RB, 2);
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.validateNumStartersAtPosition(roster, Position.WR, 2);
     this.validateNumStartersAtPosition(roster, Position.TE, 1);
     this.validateNumStartersAtPosition(roster, Position.FLX, 1);
@@ -158,7 +160,7 @@ export class AddRostersCommand implements ICommand {
   private validateNumStartersAtPosition(
     roster: Partial<RosterEntry>[],
     position: Position,
-    numStartersAtPosition: 1 | 2
+    numStartersAtPosition: number
   ) {
     const numEntries = roster.filter(re => re.position === position).length;
 

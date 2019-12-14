@@ -9,9 +9,12 @@ export abstract class DbRepository<T extends { id: number }> implements IDbRepos
     const entityWithoutId =
       entity instanceof Array ? entity.map(e => this.removeId(e)) : this.removeId(entity);
 
-    return knex<T>(this.tableName)
-      .insert(entityWithoutId as any)
-      .then(id => id[0]);
+    return (
+      knex<T>(this.tableName)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .insert(entityWithoutId as any)
+        .then(id => id[0])
+    );
   }
 
   public async select(where?: Partial<T>): Promise<T[]>;
@@ -47,9 +50,12 @@ export abstract class DbRepository<T extends { id: number }> implements IDbRepos
     // make sure we don't try to update id
     const dataWithoutId = this.removeId(data);
 
-    return knex<T>(this.tableName)
-      .where(where)
-      .update(dataWithoutId as any);
+    return (
+      knex<T>(this.tableName)
+        .where(where)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .update(dataWithoutId as any)
+    );
   }
 
   public async delete(where: Partial<T>): Promise<void> {
@@ -59,6 +65,7 @@ export abstract class DbRepository<T extends { id: number }> implements IDbRepos
   }
 
   private removeId(obj: Partial<T>): Omit<Partial<T>, 'id'> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...rest } = obj;
     return rest;
   }

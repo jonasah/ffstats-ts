@@ -44,7 +44,7 @@ export class RegularSeasonStandings extends Standings {
     subStandings.forEach(s => s.sortSubStandings());
 
     // merge sub-standings into final order
-    this.teamRecords = [].concat.apply([], subStandings.map(s => s.teamRecords));
+    this.teamRecords = [].concat(...subStandings.map(s => s.teamRecords));
 
     // assign rank
     let rank = 0;

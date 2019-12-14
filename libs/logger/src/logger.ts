@@ -18,15 +18,15 @@ export class Logger {
     });
   }
 
-  public info(message: string, ...meta: any[]) {
+  public info(message: string, ...meta: unknown[]) {
     this.logger.info(message, meta);
   }
 
-  public warn(message: string, ...meta: any[]) {
+  public warn(message: string, ...meta: unknown[]) {
     this.logger.warn(message, meta);
   }
 
-  public error(message: string, ...meta: any[]) {
+  public error(message: string, ...meta: unknown[]) {
     this.logger.error(message, meta);
   }
 }
