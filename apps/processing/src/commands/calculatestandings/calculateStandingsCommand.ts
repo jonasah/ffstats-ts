@@ -1,53 +1,41 @@
 import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
 import { hasValidResult, seasonLength } from '@ffstats/models';
-import commandLineArgs from 'command-line-args';
 import { Service } from 'typedi';
+import { Arguments, Argv } from 'yargs';
 import { PlayoffStandings } from '../../utils/playoffStandings';
 import { RegularSeasonStandings } from '../../utils/regularSeasonStandings';
 import { Standings } from '../../utils/standings';
 import { ICommand } from '../command.interface';
 import { getStandings } from './getStandings';
 
-@Service()
-export class CalculateStandingsCommand implements ICommand {
-  public readonly name = 'calculate-standings';
+interface CalculateStandingsCommandOptions {
+  year: number;
+  week: number[];
+}
 
-  private year: number;
-  private weeks: number[];
+@Service()
+export class CalculateStandingsCommand
+  implements ICommand<CalculateStandingsCommandOptions> {
+  public readonly name = 'calculate-standings';
 
   constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
 
-  public parseArguments(args: string[]): void {
-    const definitions: commandLineArgs.OptionDefinition[] = [
-      {
-        name: 'year',
-        alias: 'y',
-        type: Number
-      },
-      {
-        name: 'week',
-        alias: 'w',
-        type: Number,
-        multiple: true
-      }
-    ];
-
-    const options = commandLineArgs(definitions, {
-      argv: args || []
+  public configure(argv: Argv): Argv {
+    return argv.command(`${this.name} <year> <week...>`, 'Calculate standings', yargs => {
+      yargs
+        .positional('year', {
+          type: 'number'
+        })
+        .positional('week', {
+          type: 'number'
+        });
     });
-
-    this.year = options.year;
-    this.weeks = options.week;
-
-    if (!this.year || !this.weeks) {
-      throw new Error('Missing year and/or weeks');
-    }
   }
 
-  public async run(): Promise<void> {
-    for (const week of this.weeks) {
-      await this.calculateStandings(this.year, week);
+  public async run(args: Arguments<CalculateStandingsCommandOptions>): Promise<void> {
+    for (const week of args.week) {
+      await this.calculateStandings(args.year, week);
     }
   }
 

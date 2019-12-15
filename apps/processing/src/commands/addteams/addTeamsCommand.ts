@@ -1,42 +1,31 @@
 import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
-import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import { Service } from 'typedi';
+import { Arguments, Argv } from 'yargs';
 import { SeasonTeams } from '../../models/seasonTeams';
 import { ICommand } from '../command.interface';
 
-@Service()
-export class AddTeamsCommand implements ICommand {
-  public readonly name = 'add-teams';
+interface AddTeamsCommandOptions {
+  file: string[];
+}
 
-  private files: string[];
+@Service()
+export class AddTeamsCommand implements ICommand<AddTeamsCommandOptions> {
+  public readonly name = 'add-teams';
 
   constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
 
-  public parseArguments(args: string[]): void {
-    const definitions: commandLineArgs.OptionDefinition[] = [
-      {
-        name: 'file',
-        alias: 'f',
-        multiple: true,
-        defaultOption: true
-      }
-    ];
-
-    const options = commandLineArgs(definitions, {
-      argv: args || []
-    });
-
-    this.files = options.file || [];
-
-    if (!this.files || this.files.length === 0) {
-      this.logger.warn('No file(s) specified');
-    }
+  public configure(argv: Argv): Argv {
+    return argv.command(`${this.name} <file...>`, 'Add teams', yargs =>
+      yargs.positional('file', {
+        type: 'string'
+      })
+    );
   }
 
-  public async run(): Promise<void> {
-    for (const file of this.files) {
+  public async run(args: Arguments<AddTeamsCommandOptions>): Promise<void> {
+    for (const file of args.file) {
       await this.handleFile(file);
     }
   }

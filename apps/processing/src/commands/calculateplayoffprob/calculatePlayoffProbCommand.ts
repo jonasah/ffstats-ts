@@ -1,43 +1,36 @@
-import commandLineArgs from 'command-line-args';
-
 import { Service } from 'typedi';
+import { Argv } from 'yargs';
 import { ICommand } from '../command.interface';
 
+interface CalculatePlayoffProbCommandOptions {
+  year: number;
+  week: number[];
+}
+
 @Service()
-export class CalculatePlayoffProbCommand implements ICommand {
+export class CalculatePlayoffProbCommand
+  implements ICommand<CalculatePlayoffProbCommandOptions> {
   public readonly name = 'calculate-playoff-prob';
 
-  private year: number;
-  private weeks: number[];
-
-  public parseArguments(args: string[]): void {
-    const definitions: commandLineArgs.OptionDefinition[] = [
-      {
-        name: 'year',
-        alias: 'y',
-        type: Number
-      },
-      {
-        name: 'week',
-        alias: 'w',
-        type: Number,
-        multiple: true
+  public configure(argv: Argv): Argv {
+    return argv.command(
+      `${this.name} <year> <week...>`,
+      'Calculate playoff probabilities',
+      yargs => {
+        yargs
+          .positional('year', {
+            type: 'number'
+          })
+          .positional('week', {
+            type: 'number'
+          });
       }
-    ];
-
-    const options = commandLineArgs(definitions, {
-      argv: args || []
-    });
-
-    this.year = options.year;
-    this.weeks = options.week;
-
-    if (!this.year || !this.weeks) {
-      throw new Error('Missing year and/or weeks');
-    }
+    );
   }
 
-  public async run(): Promise<void> {
+  public async run(/*args: Arguments<CalculatePlayoffProbCommandOptions>*/): Promise<
+    void
+  > {
     // TODO
   }
 }

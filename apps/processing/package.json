@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "UNLICENSED",
   "dependencies": {
-    "command-line-args": "^5.1.1",
     "knex": "^0.19.5",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^4.1.0",
@@ -13,11 +12,12 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/command-line-args": "^5.0.0",
     "@types/sqlite3": "^3.1.5",
+    "@types/yargs": "^13.0.3",
     "ts-node": "^8.3.0",
     "tsconfig-paths": "^3.8.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "yargs": "^15.0.2"
   },
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register ./src/main.ts"

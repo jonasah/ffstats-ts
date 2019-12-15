@@ -1,10 +1,10 @@
 import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
 import { Player, Position, RosterEntry } from '@ffstats/models';
-import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import path from 'path';
 import { Service } from 'typedi';
+import { Arguments, Argv } from 'yargs';
 import { WeekRosters } from '../../models/rosters';
 import { ICommand } from '../command.interface';
 
@@ -18,47 +18,46 @@ const validRosterPositions = new Map([
   [Position.DEF, [Position.DEF, Position.BN]]
 ]);
 
-@Service()
-export class AddRostersCommand implements ICommand {
-  public readonly name = 'add-rosters';
+interface AddRostersCommandOptions {
+  file?: string[];
+  directory?: string[];
+}
 
-  private files: string[];
-  private directories: string[];
+@Service()
+export class AddRostersCommand implements ICommand<AddRostersCommandOptions> {
+  public readonly name = 'add-rosters';
 
   constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
 
-  public parseArguments(args: string[]): void {
-    const definitions: commandLineArgs.OptionDefinition[] = [
-      {
-        name: 'file',
-        alias: 'f',
-        multiple: true
-      },
-      {
-        name: 'directory',
-        alias: 'd',
-        multiple: true
-      }
-    ];
+  public configure(argv: Argv): Argv {
+    return argv.command(`${this.name} [options]`, 'Add rosters', yargs => {
+      yargs
+        .option('file', {
+          alias: 'f',
+          type: 'string',
+          array: true
+        })
+        .option('directory', {
+          alias: 'd',
+          type: 'string',
+          array: true
+        })
+        .check(argv => {
+          if ((argv.file || []).length > 0 || (argv.directory || []).length > 0) {
+            return true;
+          }
 
-    const options = commandLineArgs(definitions, {
-      argv: args || []
+          throw new Error('File and/or directory is required');
+        });
     });
-
-    this.files = options.file || [];
-    this.directories = options.directory || [];
-
-    if (this.files.length === 0 && this.directories.length === 0) {
-      this.logger.warn('No roster files or directories specified');
-    }
   }
 
-  public async run(): Promise<void> {
-    for (const file of this.files) {
+  public async run(args: Arguments<AddRostersCommandOptions>): Promise<void> {
+    for (const file of args.file || []) {
       await this.addFromFile(file);
     }
 
-    for (const directory of this.directories) {
+    for (const directory of args.directory || []) {
       await this.addFromDirectory(directory);
     }
   }

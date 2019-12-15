@@ -1,6 +1,8 @@
-export interface ICommand {
+import { Arguments, Argv } from 'yargs';
+
+export interface ICommand<TOptions> {
   name: string;
 
-  parseArguments(args: string[]): void;
-  run(): Promise<void>;
+  configure(argv: Argv): Argv;
+  run(args: Arguments<TOptions>): Promise<void>;
 }

@@ -1,43 +1,31 @@
 import { DbContext } from '@ffstats/database';
-import { Logger } from '@ffstats/logger';
 import { Game, Tiebreaker } from '@ffstats/models';
-import commandLineArgs from 'command-line-args';
 import fs from 'fs';
 import { Service } from 'typedi';
+import { Arguments, Argv } from 'yargs';
 import { Schedule } from '../../models/schedule';
 import { ICommand } from '../command.interface';
 
+interface AddScheduleCommandOptions {
+  file: string[];
+}
+
 @Service()
-export class AddScheduleCommand implements ICommand {
+export class AddScheduleCommand implements ICommand<AddScheduleCommandOptions> {
   public readonly name = 'add-schedule';
 
-  private files: string[];
+  constructor(private readonly dbContext: DbContext) {}
 
-  constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
-
-  public parseArguments(args: string[]): void {
-    const definitions: commandLineArgs.OptionDefinition[] = [
-      {
-        name: 'file',
-        alias: 'f',
-        multiple: true,
-        defaultOption: true
-      }
-    ];
-
-    const options = commandLineArgs(definitions, {
-      argv: args || []
-    });
-
-    this.files = options.file || [];
-
-    if (!this.files || this.files.length === 0) {
-      this.logger.warn('No schedule file(s) specified');
-    }
+  public configure(argv: Argv): Argv {
+    return argv.command(`${this.name} <file...>`, 'Add schedule', yargs =>
+      yargs.positional('file', {
+        type: 'string'
+      })
+    );
   }
 
-  public async run(): Promise<void> {
-    for (const file of this.files) {
+  public async run(args: Arguments<AddScheduleCommandOptions>): Promise<void> {
+    for (const file of args.file) {
       await this.addSchedule(file);
     }
   }
