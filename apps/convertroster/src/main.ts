@@ -7,4 +7,8 @@ import { ConvertRosterApp } from './convertRosterApp';
 
 Container.get(ConvertRosterApp)
   .run()
-  .then(exitCode => process.exit(exitCode));
+  .then(exitCode => process.exit(exitCode))
+  .catch(e => {
+    console.log(e);
+    process.exit(-1);
+  });

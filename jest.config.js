@@ -1,3 +1,7 @@
 module.exports = {
-  projects: ['<rootDir>/apps/processing', '<rootDir>/libs']
+  projects: [
+    '<rootDir>/apps/convertroster',
+    '<rootDir>/apps/processing',
+    '<rootDir>/libs'
+  ]
 };

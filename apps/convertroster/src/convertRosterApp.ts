@@ -6,7 +6,7 @@ import { Service } from 'typedi';
 import { knex } from '../../../libs/database/src/knexInstance';
 import { IApp } from '../../common';
 import { RosterEntry, WeekRosters } from '../../processing/src/models/rosters';
-import { FileIterator } from './fileIterator';
+import { FileIterator, LineIterator } from './iterators';
 
 const inputRosterPositions: string[] = [
   'QB',
@@ -20,7 +20,7 @@ const inputRosterPositions: string[] = [
   'RES'
 ];
 
-type OutputRosterPosition = keyof typeof Position;
+export type OutputRosterPosition = keyof typeof Position;
 
 @Service()
 export class ConvertRosterApp implements IApp {
@@ -84,10 +84,7 @@ export class ConvertRosterApp implements IApp {
         });
       } else if (inputRosterPositions.includes(line)) {
         const outputRosterPosition = line === 'W/R' ? 'FLX' : line;
-        const entry = this.parseRosterEntry(
-          outputRosterPosition as OutputRosterPosition,
-          it
-        );
+        const entry = parseRosterEntry(outputRosterPosition as OutputRosterPosition, it);
 
         if (entry == null) {
           continue;
@@ -105,56 +102,6 @@ export class ConvertRosterApp implements IApp {
     }
 
     return weekRosters;
-  }
-
-  private parseRosterEntry(
-    position: OutputRosterPosition,
-    it: FileIterator
-  ): RosterEntry {
-    const entry: RosterEntry = {
-      playerName: 'TBA',
-      playerPosition: 'RES', // placeholder, must be valid value
-      rosterPosition: position,
-      isByeWeek: false
-    };
-
-    const playerLine = it.nextLine();
-
-    if (playerLine.includes('--empty--')) {
-      return undefined;
-    }
-
-    if (playerLine.endsWith('View Videos')) {
-      const opponentLine = it.nextLine();
-
-      if (opponentLine.includes('Bye')) {
-        entry.isByeWeek = true;
-        // status and stat line is on opponent line
-      } else {
-        // skip status and stat lines
-        it.nextLine();
-        it.nextLine();
-      }
-    } else if (playerLine.includes('Bye')) {
-      entry.isByeWeek = true;
-      // status and stat line is on player line
-    } else {
-      // skip status and stat lines
-      it.nextLine();
-      it.nextLine();
-    }
-
-    // extract player name and position from player line
-    // (assume player name ends with lowercase character)
-    const playerMatch = /([A-Za-z0-9' \.-]+[a-z])([A-Z]{1,3})(\s|View)/.exec(playerLine);
-    entry.playerName = playerMatch[1];
-    entry.playerPosition = playerMatch[2] as OutputRosterPosition;
-
-    // parse points line
-    const pointsLine = it.nextLine();
-    entry.points = parseFloat(pointsLine);
-
-    return entry;
   }
 
   private writeOutputFile(weekRosters: WeekRosters, outputDirectory: string) {
@@ -177,4 +124,56 @@ export class ConvertRosterApp implements IApp {
       .select(['teams.owner', 'team_names.name'])
       .then(teams => new Map(teams.map(t => [t.name, t.owner])));
   }
+}
+
+export function parseRosterEntry(
+  position: OutputRosterPosition,
+  it: LineIterator
+): RosterEntry {
+  const entry: RosterEntry = {
+    playerName: 'TBA',
+    playerPosition: 'RES', // placeholder, must be valid value
+    rosterPosition: position,
+    isByeWeek: false
+  };
+
+  const playerLine = it.nextLine();
+
+  if (playerLine.includes('--empty--')) {
+    return undefined;
+  }
+
+  if (playerLine.endsWith('View Videos')) {
+    const opponentLine = it.nextLine();
+
+    if (opponentLine.includes('Bye')) {
+      entry.isByeWeek = true;
+      // status and stat line is on opponent line
+    } else {
+      // skip status and stat lines
+      it.nextLine();
+      it.nextLine();
+    }
+  } else if (playerLine.includes('Bye')) {
+    entry.isByeWeek = true;
+    // status and stat line is on player line
+  } else {
+    // skip status and stat lines
+    it.nextLine();
+    it.nextLine();
+  }
+
+  // extract player name and position from player line
+  // (assume player name ends with lowercase character)
+  const playerMatch = /([A-Za-z0-9' \.-]+(?:[a-z]|III))([A-Z]{1,3})(?:\s|View)/.exec(
+    playerLine
+  );
+  entry.playerName = playerMatch[1];
+  entry.playerPosition = playerMatch[2] as OutputRosterPosition;
+
+  // parse points line
+  const pointsLine = it.nextLine();
+  entry.points = parseFloat(pointsLine);
+
+  return entry;
 }
