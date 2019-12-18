@@ -55,7 +55,7 @@ export class ConvertRosterApp implements IApp {
 
     // extract year and week from file name
     const fileName = path.basename(filePath, '.txt');
-    const fileNameMatch = /(\d{4})-w(\d{1,2})/.exec(fileName);
+    const fileNameMatch = /(\d{4})w(\d{1,2})/.exec(fileName);
     const year = parseInt(fileNameMatch[1], 10);
     const week = parseInt(fileNameMatch[2], 10);
 
