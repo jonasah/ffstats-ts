@@ -11,9 +11,11 @@ export class GameRepository extends DbRepository<Game> {
   }
 
   public async getWeeksInYear(year: number): Promise<number[]> {
-    return (await knex<Game>(this.tableName)
-      .distinct('week')
-      .where('year', year)).map(g => g.week);
+    return (
+      await knex<Game>(this.tableName)
+        .distinct('week')
+        .where('year', year)
+    ).map(g => g.week);
   }
 
   public async insertWithGameScores(games: Omit<Game, 'id'>[]): Promise<void> {

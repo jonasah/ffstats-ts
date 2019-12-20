@@ -43,12 +43,9 @@ export abstract class Standings {
   public abstract sortStandings(): void;
 
   public getHighestPointsForRecord(): TeamRecord {
-    return this.teamRecords.reduce(
-      (acc, tr) => {
-        return acc.points_for > tr.points_for ? acc : tr;
-      },
-      {} as TeamRecord
-    );
+    return this.teamRecords.reduce((acc, tr) => {
+      return acc.points_for > tr.points_for ? acc : tr;
+    }, {} as TeamRecord);
   }
 
   protected advanceWeek(): void {
