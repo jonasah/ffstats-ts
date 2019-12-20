@@ -11,6 +11,7 @@
     "@types/jest": "^24.0.18",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
+    "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
@@ -29,7 +30,7 @@
     "build": "echo nope",
     "test": "jest",
     "test:silent": "jest --silent",
-    "lint:check": "eslint . --ext \".js,.ts\"",
+    "lint:check": "eslint . --ext \".js,.ts\" --max-warnings 0",
     "db:migrate:make": "knex migrate:make -x ts",
     "db:migrate:latest": "knex migrate:latest",
     "db:migrate:down": "knex migrate:down"

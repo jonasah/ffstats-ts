@@ -69,13 +69,9 @@ export class ConvertRosterApp implements IApp {
 
     const it = new FileIterator(filePath);
 
-    while (true) {
-      const line = it.nextLine();
+    let line = it.nextLine();
 
-      if (line == null) {
-        break;
-      }
-
+    while (line != null) {
       if (teamOwnerMap.has(line)) {
         // line is team name
         weekRosters.rosters.push({
@@ -99,6 +95,8 @@ export class ConvertRosterApp implements IApp {
 
         weekRosters.rosters[weekRosters.rosters.length - 1].entries.push(entry);
       }
+
+      line = it.nextLine();
     }
 
     return weekRosters;
@@ -165,7 +163,7 @@ export function parseRosterEntry(
 
   // extract player name and position from player line
   // (assume player name ends with lowercase character)
-  const playerMatch = /([A-Za-z0-9' \.-]+(?:[a-z]|III))([A-Z]{1,3})(?:\s|View)/.exec(
+  const playerMatch = /([A-Za-z0-9' .-]+(?:[a-z]|III))([A-Z]{1,3})(?:\s|View)/.exec(
     playerLine
   );
   entry.playerName = playerMatch[1];
