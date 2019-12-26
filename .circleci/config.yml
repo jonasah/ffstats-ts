@@ -25,4 +25,6 @@ jobs:
 
       - run: yarn db:migrate:latest
 
+      - run: yarn build
+
       - run: yarn test
