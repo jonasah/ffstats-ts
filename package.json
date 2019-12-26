@@ -27,7 +27,7 @@
     "start": "yarn start:processing",
     "start:processing": "yarn workspace @ffstats/processing run start",
     "start:convertroster": "yarn workspace @ffstats/convertroster run start",
-    "build": "echo nope",
+    "build": "tsc --noEmit",
     "test": "jest",
     "test:silent": "jest --silent",
     "lint:check": "eslint . --ext \".js,.ts\" --max-warnings 0",
@@ -38,7 +38,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "yarn run-p -y test:silent lint:check"
+      "pre-push": "yarn run-p -y test:silent lint:check build"
     }
   }
 }
