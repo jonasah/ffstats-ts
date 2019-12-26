@@ -132,6 +132,7 @@ export function parseRosterEntry(
     playerName: 'TBA',
     playerPosition: 'RES', // placeholder, must be valid value
     rosterPosition: position,
+    points: 0,
     isByeWeek: false
   };
 

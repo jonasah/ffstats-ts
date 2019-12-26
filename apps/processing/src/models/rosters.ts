@@ -4,7 +4,7 @@ export interface RosterEntry {
   playerName: string;
   playerPosition: keyof typeof Position; // NOTE: can we serialize to Position?
   rosterPosition: keyof typeof Position; // NOTE: can we serialize to Position?
-  points?: number;
+  points: number;
   isByeWeek: boolean;
 }
 

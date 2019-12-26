@@ -8,7 +8,7 @@ export interface RosterEntry {
   team_id: number;
   player_id: number;
   position: Position;
-  points?: number;
+  points: number;
   is_bye_week: boolean;
 
   Player?: Player;
