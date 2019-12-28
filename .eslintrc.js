@@ -16,13 +16,9 @@ module.exports = {
         'eslint:recommended',
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
-        'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'prettier/@typescript-eslint',
         'plugin:prettier/recommended'
       ],
-      parserOptions: {
-        project: './tsconfig.json'
-      },
       rules: {
         '@typescript-eslint/camelcase': 'off', // TODO: fix casing for database column names
         '@typescript-eslint/explicit-function-return-type': 'off',
@@ -44,10 +40,7 @@ module.exports = {
         '@typescript-eslint/no-unused-expressions': 'error',
         '@typescript-eslint/no-use-before-define': 'off',
         '@typescript-eslint/prefer-for-of': 'error',
-        '@typescript-eslint/prefer-nullish-coalescing': 'error',
         '@typescript-eslint/prefer-optional-chain': 'error',
-        '@typescript-eslint/prefer-readonly': 'error',
-        '@typescript-eslint/require-array-sort-compare': 'error',
         '@typescript-eslint/unified-signatures': 'error'
       },
       overrides: [

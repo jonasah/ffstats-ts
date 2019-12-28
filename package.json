@@ -31,6 +31,7 @@
     "test": "jest",
     "test:silent": "jest --silent",
     "lint:check": "eslint . --ext \".js,.ts\" --max-warnings 0",
+    "lint:check:with-type-checking": "yarn lint:check --no-eslintrc -c ./.eslintrc.with-type-checking.js",
     "db:migrate:make": "knex migrate:make -x ts",
     "db:migrate:latest": "knex migrate:latest",
     "db:migrate:down": "knex migrate:down"
@@ -38,7 +39,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "yarn run-p -y test:silent lint:check build"
+      "pre-push": "yarn run-p -y test:silent lint:check:with-type-checking build"
     }
   }
 }
