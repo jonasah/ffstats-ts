@@ -5,6 +5,7 @@ export interface IDbRepository<TModel, TEntity> {
   select(where: Partial<TModel>, unique: true): Promise<TModel>;
 
   count(where?: Partial<TModel>, columnName?: keyof TEntity | '*'): Promise<number>;
+  exists(where?: Partial<TModel>): Promise<boolean>;
 
   update(where: Partial<TModel>, data: Partial<TModel>): Promise<void>;
 

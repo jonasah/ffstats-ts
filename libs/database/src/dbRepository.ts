@@ -81,6 +81,11 @@ export abstract class DbRepository<TModel, TEntity extends { id: number }>
       .then(res => res[0].count);
   }
 
+  public async exists(where?: Partial<TModel>): Promise<boolean> {
+    // NOTE: use EXISTS query?
+    return this.count(where).then(count => count > 0);
+  }
+
   public async update(where: Partial<TModel>, data: Partial<TModel>): Promise<void> {
     // make sure we don't try to update id
     const entityWithoutId = this.removeId(this.converter.toEntity(data));

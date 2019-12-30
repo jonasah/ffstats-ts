@@ -1,5 +1,10 @@
 import { Tiebreaker } from '@ffstats/models';
 
+export interface SeasonTeam {
+  owner: string;
+  name: string;
+}
+
 export interface ScheduleGame {
   team1: string;
   team2: string;
@@ -10,12 +15,15 @@ export interface ScheduleWeek {
   games: ScheduleGame[];
 }
 
-export interface Schedule {
+export type Schedule = ScheduleWeek[];
+
+export interface Season {
   year: number;
   numTeams: number;
   numPlayoffTeams: number;
   regularSeasonLength: number;
   playoffLength: number;
   tiebreaker: keyof typeof Tiebreaker; // NOTE: can we serialize to Tiebreaker?
-  weeks: ScheduleWeek[];
+  teams: SeasonTeam[];
+  schedule: Schedule;
 }
