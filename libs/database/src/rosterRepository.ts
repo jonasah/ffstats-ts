@@ -37,10 +37,6 @@ export class RosterRepository extends DbRepository<RosterEntry, RosterEntryEntit
     super('rosters', converter);
   }
 
-  public async weekExists(year: number, week: number): Promise<boolean> {
-    return this.count({ year, week }).then(count => count > 0);
-  }
-
   public async getTotalPointsPerTeam(
     year: number,
     week: number

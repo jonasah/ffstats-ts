@@ -70,10 +70,6 @@ export class TeamRecordRepository extends DbRepository<TeamRecord, TeamRecordEnt
     );
   }
 
-  public async weekExists(year: number, week: number): Promise<boolean> {
-    return this.count({ year, week }).then(count => count > 0);
-  }
-
   public async getTeamRecordsByWeek(year: number, week: number): Promise<TeamRecord[]> {
     return this.select({ year, week })
       .then(teamRecords => {

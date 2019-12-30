@@ -59,10 +59,10 @@ export class AddPlayoffProbCommand implements ICommand<AddPlayoffProbCommandOpti
       fs.readFileSync(file, 'utf-8')
     ) as PlayoffProbabilities;
 
-    const weekExists = await this.dbContext.playoffProbability.weekExists(
-      playoffProbs.year,
-      playoffProbs.week
-    );
+    const weekExists = await this.dbContext.playoffProbability.exists({
+      year: playoffProbs.year,
+      week: playoffProbs.week
+    });
 
     if (weekExists) {
       if (force) {

@@ -67,10 +67,10 @@ export class AddRostersCommand implements ICommand<AddRostersCommandOptions> {
 
     const rosters = JSON.parse(fs.readFileSync(file, 'utf-8')) as WeekRosters;
 
-    const weekExists = await this.dbContext.rosters.weekExists(
-      rosters.year,
-      rosters.week
-    );
+    const weekExists = await this.dbContext.rosters.exists({
+      year: rosters.year,
+      week: rosters.week
+    });
 
     if (weekExists) {
       if (force) {

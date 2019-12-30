@@ -41,8 +41,4 @@ export class PlayoffProbabilityRepository extends DbRepository<
   constructor() {
     super('playoff_probabilities', converter);
   }
-
-  public async weekExists(year: number, week: number): Promise<boolean> {
-    return this.count({ year, week }).then(count => count > 0);
-  }
 }

@@ -44,7 +44,7 @@ export class CalculateStandingsCommand
     week: number,
     force?: boolean
   ): Promise<Standings> {
-    const weekExists = await this.dbContext.teamRecords.weekExists(year, week);
+    const weekExists = await this.dbContext.teamRecords.exists({ year, week });
 
     if (weekExists) {
       if (force) {
