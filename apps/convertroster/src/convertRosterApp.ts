@@ -1,9 +1,9 @@
+import { DbContext } from '@ffstats/database';
 import { Logger } from '@ffstats/logger';
-import { Position, Team } from '@ffstats/models';
+import { Position } from '@ffstats/models';
 import fs from 'fs';
 import path from 'path';
 import { Service } from 'typedi';
-import { knex } from '../../../libs/database/src/knexInstance';
 import { IApp } from '../../common';
 import { RosterEntry, WeekRosters } from '../../processing/src/models/rosters';
 import { FileIterator, LineIterator } from './iterators';
@@ -24,7 +24,7 @@ export type OutputRosterPosition = keyof typeof Position;
 
 @Service()
 export class ConvertRosterApp implements IApp {
-  constructor(private readonly logger: Logger) {}
+  constructor(private readonly dbContext: DbContext, private readonly logger: Logger) {}
 
   public async run(): Promise<number> {
     const inputDirectory = path.join(__dirname, '..', 'input');
@@ -65,7 +65,7 @@ export class ConvertRosterApp implements IApp {
       rosters: []
     };
 
-    const teamOwnerMap = await this.getTeamsAndOwners(year);
+    const teamOwnerMap = await this.dbContext.teamNames.getWithOwnersInYear(year);
 
     const it = new FileIterator(filePath);
 
@@ -111,16 +111,6 @@ export class ConvertRosterApp implements IApp {
     this.logger.info(`Writing: ${outputPath}`);
 
     fs.writeFileSync(outputPath, JSON.stringify(weekRosters, null, 2));
-  }
-
-  private async getTeamsAndOwners(year: number): Promise<Map<string, string>> {
-    return knex<Team>('teams')
-      .join('team_names', {
-        'teams.id': 'team_names.team_id'
-      })
-      .where({ 'team_names.year': year })
-      .select(['teams.owner', 'team_names.name'])
-      .then(teams => new Map(teams.map(t => [t.name, t.owner])));
   }
 }
 

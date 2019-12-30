@@ -28,4 +28,14 @@ export class TeamNameRepository extends DbRepository<TeamName, TeamNameEntity> {
   constructor() {
     super('team_names', converter);
   }
+
+  public async getWithOwnersInYear(year: number): Promise<Map<string, string>> {
+    return this.knex
+      .join('teams', {
+        'team_names.team_id': 'teams.id'
+      })
+      .where({ 'team_names.year': year })
+      .select(['team_names.name', 'teams.owner'])
+      .then(teams => new Map(teams.map(t => [t.name, t.owner])));
+  }
 }

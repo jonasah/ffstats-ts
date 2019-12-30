@@ -1,5 +1,6 @@
+import Knex from 'knex';
+import { knexConfig } from '../../../knex.config';
 import { IDbRepository } from './dbRepository.interface';
-import { knex } from './knexInstance';
 
 export interface IModelEntityConverter<TModel, TEntity> {
   toEntity(model: Partial<TModel>): Partial<TEntity>;
@@ -10,6 +11,8 @@ export abstract class DbRepository<TModel, TEntity extends { id: number }>
   implements IDbRepository<TModel, TEntity> {
   protected readonly converter: IModelEntityConverter<TModel, TEntity>;
 
+  private readonly knexInstance: Knex;
+
   protected constructor(
     private readonly tableName: string,
     converter: IModelEntityConverter<TModel, TEntity>
@@ -18,6 +21,8 @@ export abstract class DbRepository<TModel, TEntity extends { id: number }>
       toEntity: model => removeUndefined(converter.toEntity(model)),
       toModel: entity => converter.toModel(entity)
     };
+
+    this.knexInstance = Knex(knexConfig);
   }
 
   public async insert(data: Partial<TModel> | Partial<TModel>[]): Promise<number> {
@@ -93,7 +98,7 @@ export abstract class DbRepository<TModel, TEntity extends { id: number }>
   }
 
   protected get knex() {
-    return knex<TEntity>(this.tableName);
+    return this.knexInstance<TEntity>(this.tableName);
   }
 
   private removeId(obj: Partial<TEntity>): Omit<Partial<TEntity>, 'id'> {
