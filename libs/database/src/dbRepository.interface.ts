@@ -1,12 +1,12 @@
-export interface IDbRepository<T> {
-  insert(entity: Partial<T> | Partial<T>[]): Promise<number>;
+export interface IDbRepository<TModel, TEntity> {
+  insert(data: Partial<TModel> | Partial<TModel>[]): Promise<number>;
 
-  select(where?: Partial<T>): Promise<T[]>;
-  select(where: Partial<T>, unique: true): Promise<T>;
+  select(where?: Partial<TModel>): Promise<TModel[]>;
+  select(where: Partial<TModel>, unique: true): Promise<TModel>;
 
-  count(where?: Partial<T>, columnName?: keyof T | '*'): Promise<number>;
+  count(where?: Partial<TModel>, columnName?: keyof TEntity | '*'): Promise<number>;
 
-  update(where: Partial<T>, data: Partial<T>): Promise<void>;
+  update(where: Partial<TModel>, data: Partial<TModel>): Promise<void>;
 
-  delete(where: Partial<T>): Promise<void>;
+  delete(where: Partial<TModel>): Promise<void>;
 }

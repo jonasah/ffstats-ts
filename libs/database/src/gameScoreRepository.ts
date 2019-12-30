@@ -1,11 +1,35 @@
 import { GameScore } from '@ffstats/models';
 import { Service } from 'typedi';
-import { DbRepository } from './dbRepository';
+import { DbRepository, IModelEntityConverter } from './dbRepository';
+
+interface GameScoreEntity extends Omit<GameScore, 'teamId' | 'gameId'> {
+  team_id: number;
+  game_id: number;
+}
+
+const converter: IModelEntityConverter<GameScore, GameScoreEntity> = {
+  toEntity: gameScore => {
+    const { teamId, gameId, ...common } = gameScore;
+    return {
+      ...common,
+      team_id: teamId,
+      game_id: gameId
+    };
+  },
+  toModel: entity => {
+    const { team_id, game_id, ...common } = entity;
+    return {
+      ...common,
+      teamId: team_id,
+      gameId: game_id
+    };
+  }
+};
 
 @Service()
-export class GameScoreRepository extends DbRepository<GameScore> {
+export class GameScoreRepository extends DbRepository<GameScore, GameScoreEntity> {
   constructor() {
-    super('game_scores');
+    super('game_scores', converter);
   }
 
   public async updatePoints(
@@ -14,6 +38,6 @@ export class GameScoreRepository extends DbRepository<GameScore> {
     teamId: number,
     points: number
   ): Promise<void> {
-    return this.update({ year, week, team_id: teamId }, { points });
+    return this.update({ year, week, teamId }, { points });
   }
 }

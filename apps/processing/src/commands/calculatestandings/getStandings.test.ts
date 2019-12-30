@@ -11,7 +11,7 @@ const teamIds = [1, 2, 3, 4];
 const mockDbContext: any = {
   seasonInfo: {
     select: jest.fn().mockResolvedValue({
-      regular_season_length: regularSeasonLength,
+      regularSeasonLength,
       tiebreaker: Tiebreaker.Head2HeadRecords
     })
   },
@@ -21,7 +21,7 @@ const mockDbContext: any = {
   teamRecords: {
     getTeamRecordsByWeek: jest.fn().mockResolvedValue(
       teamIds.map(id => ({
-        team_id: id
+        teamId: id
       }))
     )
   }
@@ -35,7 +35,7 @@ describe('getStandings', () => {
 
     // each team should be represented
     expect(standings.teamRecords).toHaveLength(teamIds.length);
-    expect(standings.teamRecords.every(tr => teamIds.includes(tr.team_id))).toBe(true);
+    expect(standings.teamRecords.every(tr => teamIds.includes(tr.teamId))).toBe(true);
 
     standings.teamRecords.forEach(tr => {
       expect(tr.year).toBe(year);
@@ -43,12 +43,12 @@ describe('getStandings', () => {
       expect(tr.rank).toBe(0);
       expect(tr.win).toBe(0);
       expect(tr.loss).toBe(0);
-      expect(tr.points_for).toBe(0);
-      expect(tr.points_against).toBe(0);
-      expect(tr.is_playoffs).toBe(false);
+      expect(tr.pointsFor).toBe(0);
+      expect(tr.pointsAgainst).toBe(0);
+      expect(tr.isPlayoffs).toBe(false);
       // own team should not be included as an opponent
       expect(tr.head2HeadRecords).toHaveLength(teamIds.length - 1);
-      expect(tr.head2HeadRecords.map(h2h => h2h.opponent_id).includes(tr.team_id)).toBe(
+      expect(tr.head2HeadRecords.map(h2h => h2h.opponentId).includes(tr.teamId)).toBe(
         false
       );
     });
@@ -61,7 +61,7 @@ describe('getStandings', () => {
 
     // each team should be represented
     expect(standings.teamRecords).toHaveLength(teamIds.length);
-    expect(standings.teamRecords.every(tr => teamIds.includes(tr.team_id))).toBe(true);
+    expect(standings.teamRecords.every(tr => teamIds.includes(tr.teamId))).toBe(true);
   });
 
   it('should return existing playoff team records', async () => {
@@ -71,6 +71,6 @@ describe('getStandings', () => {
 
     // each team should be represented
     expect(standings.teamRecords).toHaveLength(teamIds.length);
-    expect(standings.teamRecords.every(tr => teamIds.includes(tr.team_id))).toBe(true);
+    expect(standings.teamRecords.every(tr => teamIds.includes(tr.teamId))).toBe(true);
   });
 });

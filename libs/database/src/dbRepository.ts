@@ -1,72 +1,109 @@
 import { IDbRepository } from './dbRepository.interface';
 import { knex } from './knexInstance';
 
-export abstract class DbRepository<T extends { id: number }> implements IDbRepository<T> {
-  protected constructor(protected readonly tableName: string) {}
+export interface IModelEntityConverter<TModel, TEntity> {
+  toEntity(model: Partial<TModel>): Partial<TEntity>;
+  toModel(entity: TEntity): TModel;
+}
 
-  public async insert(entity: Partial<T> | Partial<T>[]): Promise<number> {
+export abstract class DbRepository<TModel, TEntity extends { id: number }>
+  implements IDbRepository<TModel, TEntity> {
+  protected readonly converter: IModelEntityConverter<TModel, TEntity>;
+
+  protected constructor(
+    private readonly tableName: string,
+    converter: IModelEntityConverter<TModel, TEntity>
+  ) {
+    this.converter = {
+      toEntity: model => removeUndefined(converter.toEntity(model)),
+      toModel: entity => converter.toModel(entity)
+    };
+  }
+
+  public async insert(data: Partial<TModel> | Partial<TModel>[]): Promise<number> {
+    const entity =
+      data instanceof Array
+        ? data.map(d => this.converter.toEntity(d))
+        : this.converter.toEntity(data);
+
     // make sure we don't try to insert id
     const entityWithoutId =
       entity instanceof Array ? entity.map(e => this.removeId(e)) : this.removeId(entity);
 
     return (
-      knex<T>(this.tableName)
+      this.knex
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .insert(entityWithoutId as any)
         .then(id => id[0])
     );
   }
 
-  public async select(where?: Partial<T>): Promise<T[]>;
-  public async select(where: Partial<T>, unique: true): Promise<T>;
-  public async select(where?: Partial<T>, unique?: true): Promise<T | T[]> {
+  public async select(where?: Partial<TModel>): Promise<TModel[]>;
+  public async select(where: Partial<TModel>, unique: true): Promise<TModel>;
+  public async select(
+    where?: Partial<TModel>,
+    unique?: true
+  ): Promise<TModel | TModel[]> {
     if (!where) {
       // get()
-      return knex<T>(this.tableName).then(res => res as T[]);
+      return this.knex
+        .then(res => res as TEntity[])
+        .then(entities => entities.map(e => this.converter.toModel(e)));
     }
 
     if (unique) {
       // get(where, unique)
-      return knex<T>(this.tableName)
-        .where(where)
+      return this.knex
+        .where(this.converter.toEntity(where))
         .first()
-        .then(res => res as T);
+        .then(res => this.converter.toModel(res as TEntity));
     }
 
     // get(where)
-    return knex<T>(this.tableName)
-      .where(where)
-      .then(res => res as T[]);
+    return this.knex
+      .where(this.converter.toEntity(where))
+      .then(res => res as TEntity[])
+      .then(entities => entities.map(e => this.converter.toModel(e)));
   }
 
-  public async count(where?: Partial<T>, columnName?: keyof T | '*'): Promise<number> {
-    return knex<T>(this.tableName)
-      .where(where || {})
+  public async count(
+    where?: Partial<TModel>,
+    columnName?: keyof TEntity | '*'
+  ): Promise<number> {
+    return this.knex
+      .where(this.converter.toEntity(where || {}))
       .count({ count: columnName || 'id' })
       .then(res => res[0].count);
   }
 
-  public async update(where: Partial<T>, data: Partial<T>): Promise<void> {
+  public async update(where: Partial<TModel>, data: Partial<TModel>): Promise<void> {
     // make sure we don't try to update id
-    const dataWithoutId = this.removeId(data);
+    const entityWithoutId = this.removeId(this.converter.toEntity(data));
 
     return (
-      knex<T>(this.tableName)
-        .where(where)
+      this.knex
+        .where(this.converter.toEntity(where))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .update(dataWithoutId as any)
+        .update(entityWithoutId as any)
     );
   }
 
-  public async delete(where: Partial<T>): Promise<void> {
-    return knex<T>(this.tableName)
-      .where(where)
-      .del();
+  public async delete(where: Partial<TModel>): Promise<void> {
+    return this.knex.where(this.converter.toEntity(where)).del();
   }
 
-  private removeId(obj: Partial<T>): Omit<Partial<T>, 'id'> {
+  protected get knex() {
+    return knex<TEntity>(this.tableName);
+  }
+
+  private removeId(obj: Partial<TEntity>): Omit<Partial<TEntity>, 'id'> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...rest } = obj;
     return rest;
   }
+}
+
+function removeUndefined<T>(obj: T): T {
+  Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key]);
+  return obj;
 }

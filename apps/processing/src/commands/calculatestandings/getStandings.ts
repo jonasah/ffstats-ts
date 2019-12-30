@@ -22,13 +22,13 @@ export async function getStandings(
         id: 0,
         year,
         week: 0,
-        team_id: team.id,
+        teamId: team.id,
         rank: 0,
         win: 0,
         loss: 0,
-        points_for: 0,
-        points_against: 0,
-        is_playoffs: false,
+        pointsFor: 0,
+        pointsAgainst: 0,
+        isPlayoffs: false,
         // create H2H records against every other team
         head2HeadRecords: teams
           .filter(t => t.id !== team.id)
@@ -36,11 +36,11 @@ export async function getStandings(
             id: 0, // NOTE: should not be needed
             year,
             week,
-            team_id: team.id,
-            opponent_id: t.id,
+            teamId: team.id,
+            opponentId: t.id,
             win: 0,
             loss: 0,
-            team_record_id: 0 // NOTE: should not be needed
+            teamRecordId: 0 // NOTE: should not be needed
           }))
       });
     });
@@ -50,7 +50,7 @@ export async function getStandings(
 
   const seasonInfo = await dbContext.seasonInfo.select({ year }, true);
 
-  if (week <= seasonInfo.regular_season_length) {
+  if (week <= seasonInfo.regularSeasonLength) {
     return RegularSeasonStandings.fromTeamRecords(teamRecords, seasonInfo.tiebreaker);
   }
 

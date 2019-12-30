@@ -2,9 +2,9 @@ export interface Head2HeadRecord {
   id: number;
   year: number;
   week: number;
-  team_id: number;
-  opponent_id: number;
+  teamId: number;
+  opponentId: number;
   win: number;
   loss: number;
-  team_record_id: number;
+  teamRecordId: number;
 }

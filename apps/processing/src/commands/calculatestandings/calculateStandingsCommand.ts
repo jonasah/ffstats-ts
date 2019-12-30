@@ -66,7 +66,7 @@ export class CalculateStandingsCommand
     const seasonInfo = await this.dbContext.seasonInfo.select({ year }, true);
 
     const newStandings =
-      week <= seasonInfo.regular_season_length
+      week <= seasonInfo.regularSeasonLength
         ? RegularSeasonStandings.fromPreviousStandings(prevStandings)
         : PlayoffStandings.fromPreviousStandings(prevStandings);
 
@@ -81,21 +81,21 @@ export class CalculateStandingsCommand
     await this.dbContext.teamRecords.insertWithHead2HeadRecords(newStandings.teamRecords);
 
     // update season info
-    if (week <= seasonInfo.regular_season_length) {
+    if (week <= seasonInfo.regularSeasonLength) {
       const highestPointsForRecord = newStandings.getHighestPointsForRecord();
-      seasonInfo.highest_points_for = highestPointsForRecord.points_for;
-      seasonInfo.highest_points_for_team_id = highestPointsForRecord.team_id;
+      seasonInfo.highestPointsFor = highestPointsForRecord.pointsFor;
+      seasonInfo.highestPointsForTeamId = highestPointsForRecord.teamId;
 
-      if (week === seasonInfo.regular_season_length) {
-        seasonInfo.regular_season_champion_id = newStandings.teamRecords[0].team_id;
+      if (week === seasonInfo.regularSeasonLength) {
+        seasonInfo.regularSeasonChampionId = newStandings.teamRecords[0].teamId;
       }
     } else if (week === seasonLength(seasonInfo)) {
-      seasonInfo.champion_id = newStandings.teamRecords[0].team_id;
-      seasonInfo.second_place_id = newStandings.teamRecords[1].team_id;
+      seasonInfo.championId = newStandings.teamRecords[0].teamId;
+      seasonInfo.secondPlaceId = newStandings.teamRecords[1].teamId;
       // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-      seasonInfo.third_place_id = newStandings.teamRecords[2].team_id;
-      seasonInfo.sacko_id =
-        newStandings.teamRecords[newStandings.teamRecords.length - 1].team_id;
+      seasonInfo.thirdPlaceId = newStandings.teamRecords[2].teamId;
+      seasonInfo.sackoId =
+        newStandings.teamRecords[newStandings.teamRecords.length - 1].teamId;
     }
 
     await this.dbContext.seasonInfo.update({ id: seasonInfo.id }, seasonInfo);

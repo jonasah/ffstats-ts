@@ -17,19 +17,19 @@ export class RegularSeasonSubStandings {
       return;
     }
 
-    const teamIds = this.teamRecords.map(tr => tr.team_id);
+    const teamIds = this.teamRecords.map(tr => tr.teamId);
 
     // create sub-records
     const subRecords = this.teamRecords.map(tr => {
       const subRecord = {
-        teamId: tr.team_id,
+        teamId: tr.teamId,
         win: 0,
         loss: 0,
-        pointsFor: tr.points_for
+        pointsFor: tr.pointsFor
       };
 
       tr.head2HeadRecords.forEach(h2h => {
-        if (teamIds.includes(h2h.opponent_id)) {
+        if (teamIds.includes(h2h.opponentId)) {
           subRecord.win += h2h.win;
           subRecord.loss += h2h.loss;
         }
@@ -59,8 +59,8 @@ export class RegularSeasonSubStandings {
 
     // sort team records
     this.teamRecords.sort((tr1, tr2) => {
-      const p1 = subRecords.findIndex(sr => sr.teamId === tr1.team_id);
-      const p2 = subRecords.findIndex(sr => sr.teamId === tr2.team_id);
+      const p1 = subRecords.findIndex(sr => sr.teamId === tr1.teamId);
+      const p2 = subRecords.findIndex(sr => sr.teamId === tr2.teamId);
       return compareTo(p1, p2); // lowest position in subRecords first
     });
   }

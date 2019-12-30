@@ -70,15 +70,15 @@ export class AddScheduleCommand implements ICommand<AddScheduleCommandOptions> {
               id: 0, // NOTE: should not be needed
               year: schedule.year,
               week: week.week,
-              team_id: team1.id,
-              game_id: 0 // NOTE: should not be needed
+              teamId: team1.id,
+              gameId: 0 // NOTE: should not be needed
             },
             {
               id: 0, // NOTE: should not be needed
               year: schedule.year,
               week: week.week,
-              team_id: team2.id,
-              game_id: 0 // NOTE: should not be needed
+              teamId: team2.id,
+              gameId: 0 // NOTE: should not be needed
             }
           ]
         });
@@ -90,10 +90,10 @@ export class AddScheduleCommand implements ICommand<AddScheduleCommandOptions> {
     if (!(await this.dbContext.seasonInfo.select({ year: schedule.year }, true))) {
       await this.dbContext.seasonInfo.insert({
         year: schedule.year,
-        num_teams: schedule.numTeams,
-        num_playoff_teams: schedule.numPlayoffTeams,
-        regular_season_length: schedule.regularSeasonLength,
-        playoff_length: schedule.playoffLength,
+        numTeams: schedule.numTeams,
+        numPlayoffTeams: schedule.numPlayoffTeams,
+        regularSeasonLength: schedule.regularSeasonLength,
+        playoffLength: schedule.playoffLength,
         tiebreaker: Tiebreaker[schedule.tiebreaker]
       });
     }

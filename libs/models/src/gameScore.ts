@@ -2,7 +2,7 @@ export interface GameScore {
   id: number;
   year: number;
   week: number;
-  team_id: number;
+  teamId: number;
   points?: number;
-  game_id: number;
+  gameId: number;
 }

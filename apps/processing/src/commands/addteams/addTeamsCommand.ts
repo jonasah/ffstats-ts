@@ -56,7 +56,7 @@ export class AddTeamsCommand implements ICommand<AddTeamsCommandOptions> {
           `Set team name "${team.name}" for ${team.owner} in ${teams.year}`
         );
         await this.dbContext.teamNames.insert({
-          team_id: teamId,
+          teamId,
           year: teams.year,
           name: team.name
         });

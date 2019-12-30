@@ -92,9 +92,9 @@ export class AddPlayoffProbCommand implements ICommand<AddPlayoffProbCommandOpti
       playoffProbsToAdd.push({
         year: playoffProbs.year,
         week: playoffProbs.week,
-        team_id: team.id,
-        including_tiebreaker: playoffProb.includingTiebreakers,
-        excluding_tiebreaker: playoffProb.excludingTiebreakers
+        teamId: team.id,
+        includingTiebreaker: playoffProb.includingTiebreakers,
+        excludingTiebreaker: playoffProb.excludingTiebreakers
       });
     }
 

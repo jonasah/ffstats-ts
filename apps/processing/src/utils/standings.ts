@@ -14,16 +14,16 @@ export abstract class Standings {
     const gameScore1 = game.gameScores[0];
     const gameScore2 = game.gameScores[1];
 
-    const team1Record = this.getTeamRecord(gameScore1.team_id);
-    team1Record.points_for += gameScore1.points;
-    team1Record.points_against += gameScore2.points;
+    const team1Record = this.getTeamRecord(gameScore1.teamId);
+    team1Record.pointsFor += gameScore1.points;
+    team1Record.pointsAgainst += gameScore2.points;
 
-    const team2Record = this.getTeamRecord(gameScore2.team_id);
-    team2Record.points_for += gameScore2.points;
-    team2Record.points_against += gameScore1.points;
+    const team2Record = this.getTeamRecord(gameScore2.teamId);
+    team2Record.pointsFor += gameScore2.points;
+    team2Record.pointsAgainst += gameScore1.points;
 
-    const team1VsTeam2Record = this.getHead2HeadRecord(team1Record, team2Record.team_id);
-    const team2VsTeam1Record = this.getHead2HeadRecord(team2Record, team1Record.team_id);
+    const team1VsTeam2Record = this.getHead2HeadRecord(team1Record, team2Record.teamId);
+    const team2VsTeam1Record = this.getHead2HeadRecord(team2Record, team1Record.teamId);
 
     if (gameScore1.points > gameScore2.points) {
       team1Record.win += 1;
@@ -44,7 +44,7 @@ export abstract class Standings {
 
   public getHighestPointsForRecord(): TeamRecord {
     return this.teamRecords.reduce((acc, tr) => {
-      return acc.points_for > tr.points_for ? acc : tr;
+      return acc.pointsFor > tr.pointsFor ? acc : tr;
     }, {} as TeamRecord);
   }
 
@@ -59,13 +59,13 @@ export abstract class Standings {
   }
 
   protected getTeamRecord(teamId: number): TeamRecord {
-    return this.teamRecords.find(tr => tr.team_id === teamId);
+    return this.teamRecords.find(tr => tr.teamId === teamId);
   }
 
   protected getHead2HeadRecord(
     teamRecord: TeamRecord,
     opponentId: number
   ): Head2HeadRecord {
-    return teamRecord.head2HeadRecords.find(h2h => h2h.opponent_id === opponentId);
+    return teamRecord.head2HeadRecords.find(h2h => h2h.opponentId === opponentId);
   }
 }

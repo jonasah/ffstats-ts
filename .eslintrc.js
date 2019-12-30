@@ -20,7 +20,6 @@ module.exports = {
         'plugin:prettier/recommended'
       ],
       rules: {
-        '@typescript-eslint/camelcase': 'off', // TODO: fix casing for database column names
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-member-accessibility': [
           'error',
@@ -55,6 +54,12 @@ module.exports = {
           files: ['apps/convertroster/**/*.ts'],
           rules: {
             '@typescript-eslint/no-magic-numbers': 'off'
+          }
+        },
+        {
+          files: ['libs/database/src/*Repository.ts'],
+          rules: {
+            '@typescript-eslint/camelcase': 'off'
           }
         }
       ]

@@ -1,6 +1,6 @@
 export interface TeamName {
   id: number;
-  team_id: number;
+  teamId: number;
   year: number;
   name: string;
 }

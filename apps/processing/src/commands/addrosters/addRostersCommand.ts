@@ -114,11 +114,11 @@ export class AddRostersCommand implements ICommand<AddRostersCommandOptions> {
         teamRosterEntries.push({
           year: rosters.year,
           week: rosters.week,
-          team_id: team.id,
-          player_id: player.id,
+          teamId: team.id,
+          playerId: player.id,
           position: Position[entry.rosterPosition],
           points: entry.points,
-          is_bye_week: entry.isByeWeek || false
+          isByeWeek: entry.isByeWeek || false
         });
       }
 
