@@ -1,5 +1,5 @@
+import { compareTo, fuzzyCompareEqual, pct } from '@ffstats/math';
 import { TeamRecord, Tiebreaker } from '@ffstats/models';
-import { compareTo, fuzzyCompareEqual, pct } from '../math/math';
 import { RegularSeasonSubStandings } from './regularSeasonSubStandings';
 import { Standings } from './standings';
 

@@ -1,5 +1,5 @@
+import { compareTo } from '@ffstats/math';
 import { Game, TeamRecord, Tiebreaker } from '@ffstats/models';
-import { compareTo } from '../math/math';
 import { Standings } from './standings';
 
 export class PlayoffStandings extends Standings {
