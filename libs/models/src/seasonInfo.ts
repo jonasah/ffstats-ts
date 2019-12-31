@@ -1,7 +1,6 @@
 import { Tiebreaker } from './enums/tiebreaker';
 
 export interface SeasonInfo {
-  id: number;
   year: number;
   numTeams: number;
   numPlayoffTeams: number;

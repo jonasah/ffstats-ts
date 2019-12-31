@@ -1,5 +1,4 @@
 export interface PlayoffProbability {
-  id: number;
   year: number;
   week: number;
   teamId: number;

@@ -4,6 +4,7 @@ import { DbRepository, IModelEntityConverter } from './dbRepository';
 
 interface RosterEntryEntity
   extends Omit<RosterEntry, 'teamId' | 'playerId' | 'isByeWeek' | 'Player'> {
+  id: number;
   team_id: number;
   player_id: number;
   is_bye_week: boolean;
@@ -21,7 +22,8 @@ const converter: IModelEntityConverter<RosterEntry, RosterEntryEntity> = {
     };
   },
   toModel: entity => {
-    const { team_id, player_id, is_bye_week, ...common } = entity;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, team_id, player_id, is_bye_week, ...common } = entity;
     return {
       ...common,
       teamId: team_id,

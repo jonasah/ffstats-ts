@@ -98,7 +98,7 @@ export class CalculateStandingsCommand
         newStandings.teamRecords[newStandings.teamRecords.length - 1].teamId;
     }
 
-    await this.dbContext.seasonInfo.update({ id: seasonInfo.id }, seasonInfo);
+    await this.dbContext.seasonInfo.update({ year: seasonInfo.year }, seasonInfo);
 
     return newStandings;
   }

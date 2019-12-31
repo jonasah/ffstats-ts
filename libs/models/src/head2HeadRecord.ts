@@ -1,5 +1,4 @@
 export interface Head2HeadRecord {
-  id: number;
   year: number;
   week: number;
   teamId: number;

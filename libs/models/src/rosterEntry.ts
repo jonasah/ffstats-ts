@@ -2,7 +2,6 @@ import { Player } from '@ffstats/models';
 import { Position } from './enums/position';
 
 export interface RosterEntry {
-  id: number;
   year: number;
   week: number;
   teamId: number;

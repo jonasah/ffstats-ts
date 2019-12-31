@@ -129,14 +129,12 @@ export class AddSeasonCommand implements ICommand<AddSeasonCommandOptions> {
           week: scheduleWeek.week,
           gameScores: [
             {
-              id: 0, // NOTE: should not be needed
               year,
               week: scheduleWeek.week,
               teamId: team1.id,
               gameId: 0 // NOTE: should not be needed
             },
             {
-              id: 0, // NOTE: should not be needed
               year,
               week: scheduleWeek.week,
               teamId: team2.id,

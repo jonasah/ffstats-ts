@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import { DbRepository, IModelEntityConverter } from './dbRepository';
 
 interface GameScoreEntity extends Omit<GameScore, 'teamId' | 'gameId'> {
+  id: number;
   team_id: number;
   game_id: number;
 }
@@ -17,7 +18,8 @@ const converter: IModelEntityConverter<GameScore, GameScoreEntity> = {
     };
   },
   toModel: entity => {
-    const { team_id, game_id, ...common } = entity;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, team_id, game_id, ...common } = entity;
     return {
       ...common,
       teamId: team_id,

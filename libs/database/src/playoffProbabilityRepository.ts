@@ -7,6 +7,7 @@ interface PlayoffProbabilityEntity
     PlayoffProbability,
     'teamId' | 'includingTiebreaker' | 'excludingTiebreaker'
   > {
+  id: number;
   team_id: number;
   including_tiebreaker: number;
   excluding_tiebreaker: number;
@@ -23,7 +24,8 @@ const converter: IModelEntityConverter<PlayoffProbability, PlayoffProbabilityEnt
     };
   },
   toModel: entity => {
-    const { team_id, including_tiebreaker, excluding_tiebreaker, ...common } = entity;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, team_id, including_tiebreaker, excluding_tiebreaker, ...common } = entity;
     return {
       ...common,
       teamId: team_id,

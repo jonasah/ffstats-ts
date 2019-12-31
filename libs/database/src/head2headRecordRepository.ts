@@ -4,6 +4,7 @@ import { DbRepository, IModelEntityConverter } from './dbRepository';
 
 interface Head2HeadRecordEntity
   extends Omit<Head2HeadRecord, 'teamId' | 'opponentId' | 'teamRecordId'> {
+  id: number;
   team_id: number;
   opponent_id: number;
   team_record_id: number;
@@ -20,7 +21,8 @@ const converter: IModelEntityConverter<Head2HeadRecord, Head2HeadRecordEntity> =
     };
   },
   toModel: entity => {
-    const { team_id, opponent_id, team_record_id, ...common } = entity;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, team_id, opponent_id, team_record_id, ...common } = entity;
     return {
       ...common,
       teamId: team_id,

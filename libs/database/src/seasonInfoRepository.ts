@@ -2,7 +2,8 @@ import { SeasonInfo } from '@ffstats/models';
 import { Service } from 'typedi';
 import { DbRepository, IModelEntityConverter } from './dbRepository';
 
-interface SeasonInfoEntity extends Pick<SeasonInfo, 'id' | 'year' | 'tiebreaker'> {
+interface SeasonInfoEntity extends Pick<SeasonInfo, 'year' | 'tiebreaker'> {
+  id: number;
   num_teams: number;
   num_playoff_teams: number;
   regular_season_length: number;
@@ -18,7 +19,6 @@ interface SeasonInfoEntity extends Pick<SeasonInfo, 'id' | 'year' | 'tiebreaker'
 
 const converter: IModelEntityConverter<SeasonInfo, SeasonInfoEntity> = {
   toEntity: seasonInfo => ({
-    id: seasonInfo.id,
     year: seasonInfo.year,
     num_teams: seasonInfo.numTeams,
     num_playoff_teams: seasonInfo.numPlayoffTeams,
@@ -34,7 +34,6 @@ const converter: IModelEntityConverter<SeasonInfo, SeasonInfoEntity> = {
     tiebreaker: seasonInfo.tiebreaker
   }),
   toModel: entity => ({
-    id: entity.id,
     year: entity.year,
     numTeams: entity.num_teams,
     numPlayoffTeams: entity.num_playoff_teams,
