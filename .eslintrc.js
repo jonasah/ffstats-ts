@@ -3,23 +3,45 @@ module.exports = {
   env: {
     node: true
   },
-  extends: ['eslint:recommended', 'plugin:prettier/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:import/recommended',
+    'plugin:jest/recommended',
+    'plugin:jest/style',
+    'plugin:prettier/recommended'
+  ],
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module'
+  },
+  rules: {
+    'import/order': [
+      'error',
+      {
+        groups: [['builtin', 'external']],
+        alphabetize: {
+          order: 'asc'
+        }
+      }
+    ]
   },
   overrides: [
     {
       files: ['*.ts'],
       parser: '@typescript-eslint/parser',
       extends: [
-        'eslint:recommended',
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
-        'prettier/@typescript-eslint',
-        'plugin:prettier/recommended'
+        'plugin:import/typescript',
+        'prettier/@typescript-eslint'
       ],
       rules: {
+        'import/no-unresolved': [
+          'error',
+          {
+            ignore: ['^@ffstats/']
+          }
+        ],
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-member-accessibility': [
           'error',

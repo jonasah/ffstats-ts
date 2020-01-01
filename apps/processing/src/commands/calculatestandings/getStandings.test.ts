@@ -48,9 +48,7 @@ describe('getStandings', () => {
       expect(tr.isPlayoffs).toBe(false);
       // own team should not be included as an opponent
       expect(tr.head2HeadRecords).toHaveLength(teamIds.length - 1);
-      expect(tr.head2HeadRecords.map(h2h => h2h.opponentId).includes(tr.teamId)).toBe(
-        false
-      );
+      expect(tr.head2HeadRecords.map(h2h => h2h.opponentId)).not.toContain(tr.teamId);
     });
   });
 
