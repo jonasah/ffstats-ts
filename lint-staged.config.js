@@ -1,3 +1,3 @@
 module.exports = {
-  '*.{js,ts}': ['yarn lint:check --fix', 'git add']
+  '*.{js,ts}': ['eslint --max-warnings 0 --fix', 'git add']
 };
