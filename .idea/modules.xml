@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ffstats-ts.iml" filepath="$PROJECT_DIR$/.idea/ffstats-ts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ffstats-ts-input/.idea/ffstats-ts-input.iml" filepath="$PROJECT_DIR$/../ffstats-ts-input/.idea/ffstats-ts-input.iml" />
+    </modules>
+  </component>
+</project>
